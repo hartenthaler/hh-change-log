@@ -108,8 +108,14 @@ Keep a copy of any local modifications before replacing the module files.
 <a name="Translation"></a>
 ## 🌍 Translation
 
-This module does not currently maintain its own translation files.
+This module supports custom translations through gettext files in `resources/lang/*.po`.
+
+The module-specific title and description can be translated there.
 The table labels and change-log status texts are taken from webtrees' existing translations.
+
+There are currently translations for
+
+* German by [@Hartenthaler](https://github.com/Hartenthaler)
 
 <a name="Support"></a>
 ## ❓ Support

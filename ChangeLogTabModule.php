@@ -16,6 +16,7 @@ namespace Hartenthaler\Webtrees\ChangeLog;
  */
 
 use Fisharebest\Webtrees\Auth;
+use Fisharebest\Localization\Translation;
 use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\Individual;
 use Fisharebest\Webtrees\Module\AbstractModule;
@@ -92,6 +93,39 @@ class ChangeLogTabModule extends AbstractModule implements ModuleTabInterface, M
     public function customModuleSupportUrl(): string
     {
         return 'https://github.com/Hartenthaler/hh-change-log/issues';
+    }
+
+    /**
+     * Additional/updated translations.
+     *
+     * @param string $language
+     *
+     * @return array<string,string>
+     */
+    public function customTranslations(string $language): array
+    {
+        $languageFile = match ($language) {
+            'de'    => 'de',
+            default => '',
+        };
+
+        if ($languageFile === '') {
+            return [];
+        }
+
+        $languageFolder = $this->resourcesFolder() . 'lang' . DIRECTORY_SEPARATOR;
+        $poFile = $languageFolder . $languageFile . '.po';
+        $moFile = $languageFolder . $languageFile . '.mo';
+
+        if (is_file($poFile)) {
+            return (new Translation($poFile))->asArray();
+        }
+
+        if (is_file($moFile)) {
+            return (new Translation($moFile))->asArray();
+        }
+
+        return [];
     }
 
     /**
