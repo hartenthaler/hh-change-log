@@ -1,0 +1,52 @@
+<?php
+
+use Fisharebest\Webtrees\Http\RequestHandlers\PendingChangesLogData;
+use Fisharebest\Webtrees\Individual;
+use Fisharebest\Webtrees\I18N;
+use Fisharebest\Webtrees\Tree;
+use Fisharebest\Webtrees\View;
+
+/**
+ * @var Tree                 $tree
+ * @var Individual           $individual
+ * @var string               $xref
+ * @var string               $hh_change_log_css
+ */
+
+?>
+
+<div class="col of-tab-changes pb-4">
+	<div class="table-responsive shadow">
+		<table
+			class="of-changes table table-bordered table-sm datatables d-none"
+			<?= view('lists/datatables-attributes') ?>
+			data-ajax="<?= route(PendingChangesLogData::class, ['xref' => $xref, 'tree' => $tree->name()]) ?>"
+			data-server-side="true"
+			data-sorting="<?= e('[[ 0, "desc" ]]') ?>"
+		>
+			<thead>
+				<tr>
+					<th data-visible="false"></th>
+					<th><?= I18N::translate('Timestamp') ?></th>
+					<th><?= I18N::translate('Status') ?></th>
+					<th><?= I18N::translate('Record') ?></th>
+					<th data-sortable="false"><?= I18N::translate('Data') ?></th>
+					<th><?= I18N::translate('User') ?></th>
+					<th><?= I18N::translate('Tree') ?></th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+</div>
+<?php
+
+View::push('javascript') ?>
+<script>
+  var newSheet=document.createElement("link");
+  newSheet.setAttribute("rel","stylesheet");
+  newSheet.setAttribute("type","text/css");
+  newSheet.setAttribute("href","<?= $hh_change_log_css ?>");
+  document.head.appendChild(newSheet);
+</script>
+<?php View::endpush() ?>
+

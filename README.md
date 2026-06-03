@@ -1,0 +1,150 @@
+# 🌳 **webtrees** module for Change Log (hh-change-log)
+
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
+
+![webtrees major version](https://img.shields.io/badge/webtrees-v2.1.x-green)
+![webtrees major version](https://img.shields.io/badge/webtrees-v2.2.x-green)
+
+This [webtrees](https://www.webtrees.net) custom module adds a **Changes** tab to the individual page.
+It shows the change-log entries for the currently viewed individual in a read-only table.
+
+The module was originally created by **Nigel Osborne** for the [Our Families](http://www.our-families.info) website.
+Current responsibility and maintenance are handled by **Hermann Hartenthaler**.
+
+<a name="Contents"></a>
+## 📚 Contents
+
+This Readme contains the following main sections
+
+* [Purpose](#Purpose)
+* [Scope](#Scope)
+* [Main features](#Features)
+* [Configuration](#Configuration)
+* [Requirements](#Requirements)
+* [Installation](#Installation)
+* [Upgrade](#Upgrade)
+* [Translation](#Translation)
+* [Support](#Support)
+* [Credits](#Credits)
+* [License](#License)
+
+<a name="Purpose"></a>
+## 🎯 Purpose
+
+The standard webtrees control panel contains a global **Changes log** for managers.
+This module makes the same type of information available directly on an individual page, filtered to the person currently being viewed.
+
+It helps managers review what GEDCOM data was changed for a specific individual without opening the full control-panel change log and manually filtering it.
+
+<a name="Scope"></a>
+## 🔎 Scope
+
+The module adds one individual-page tab named **Changes**.
+It does not create GEDCOM records and it does not store additional data in its own database table.
+
+The tab reads the existing webtrees change-log data and shows only entries related to the selected individual.
+The output is read-only.
+
+The tab is available only to managers of the current family tree because the underlying webtrees change-log endpoint is protected by manager permissions.
+
+<a name="Features"></a>
+## 💡 Main features
+
+The module supports
+
+* an individual-page tab named **Changes**
+* read-only display of change-log entries for the selected individual
+* DataTables-based server-side table loading
+* timestamp, status, record, GEDCOM data, user, and tree columns
+* highlighted GEDCOM differences for inserted and deleted data
+* reuse of webtrees' existing translated change-log labels
+* no separate module configuration
+
+<a name="Configuration"></a>
+## ⚙️ Configuration
+
+Administrators can configure the module in the webtrees control panel under the individual-page tab modules.
+
+The available settings are the standard webtrees tab settings:
+
+* whether the module is enabled
+* the access level of the tab
+* the tab position among the other individual-page tabs
+
+There are no additional module-specific settings.
+
+If the standard webtrees tab with the same visible name is enabled, disable the duplicate tab to avoid confusion.
+This custom module is identifiable in the control panel by its custom-module metadata and author information.
+
+<a name="Requirements"></a>
+## 📌 Requirements
+
+This module requires **webtrees** version 2.1 or later.
+It has the same system requirements as [webtrees](https://github.com/fisharebest/webtrees#system-requirements).
+
+The module depends on the existing webtrees pending-changes log functionality.
+Because this functionality is manager-only in webtrees, the tab is also manager-only.
+
+<a name="Installation"></a>
+## 📥 Installation
+
+**Manual installation**:
+
+1. Make a database backup.
+1. Download or copy the module folder.
+1. Place the folder in the `webtrees/modules_v4` directory of your web server.
+1. Rename the folder to `hh-change-log`.
+1. Login to **webtrees** as administrator.
+1. Go to <span class="pointer">Control Panel / Modules / Individual page / Tabs</span>.
+1. Enable the module named **Changes**.
+1. Disable any duplicate standard tab with the same visible name if necessary.
+1. Save the module settings.
+
+<a name="Upgrade"></a>
+## ⬆️ Upgrade
+
+To update the module, replace the `hh-change-log` files with the files from the latest release or maintained source.
+
+Keep a copy of any local modifications before replacing the module files.
+
+<a name="Translation"></a>
+## 🌍 Translation
+
+This module does not currently maintain its own translation files.
+The table labels and change-log status texts are taken from webtrees' existing translations.
+
+<a name="Support"></a>
+## ❓ Support
+
+* <span style="font-weight: bold;">Maintainer: </span>Current responsibility and maintenance are handled by Hermann Hartenthaler.
+* <span style="font-weight: bold;">Original author: </span>The module was originally created by Nigel Osborne for the Our Families website.
+* <span style="font-weight: bold;">Forum: </span>General webtrees support can be found in the [webtrees forum](https://www.webtrees.net/).
+
+<a name="Credits"></a>
+## 🙏 Credits
+
+This module was originally created by **Nigel Osborne** for the [Our Families](http://www.our-families.info) website.
+
+The original PDF documentation stated that the Our Families modules were written primarily for Nigel Osborne's own use, were not officially released, but could be shared under the same GPL as webtrees itself.
+It also stated that there was no guarantee of ongoing updates, maintenance, modifications, or support.
+
+Current responsibility and maintenance are handled by **Hermann Hartenthaler**.
+
+<a name="License"></a>
+## 📄 License
+
+This module uses GPL-3.0-or-later as a license.
+
+* Copyright (C) 2023 Nigel Osborne and our-families.info.
+* Maintained from 2026 by Hermann Hartenthaler.
+* Derived from **webtrees** - Copyright webtrees development team.
+
+This program is free software: you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.

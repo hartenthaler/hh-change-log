@@ -1,0 +1,21 @@
+﻿// Colors
+$primary: #ab3334;
+$secondary: #faf5e8;
+$success: #3adb76;
+$warning: #ffae00;
+//
+div.gedcom-data {
+	white-space: pre-wrap;
+	del,
+	del > a {
+		background-color: $warning;
+		font-weight: 600;
+		text-decoration-line: line-through;
+		text-decoration-thickness: 0.1875rem;
+	}
+	ins {
+		background-color: $success;
+		font-weight: 600;
+		text-decoration-line: none;
+	}
+}
