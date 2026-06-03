@@ -1,8 +1,6 @@
 # 🌳 **webtrees** module for Change Log (hh-change-log)
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
-
-![webtrees major version](https://img.shields.io/badge/webtrees-v2.1.x-green)
 ![webtrees major version](https://img.shields.io/badge/webtrees-v2.2.x-green)
 
 This [webtrees](https://www.webtrees.net) custom module adds a **Changes** tab to the individual page.
@@ -79,7 +77,7 @@ This custom module is identifiable in the control panel by its custom-module met
 <a name="Requirements"></a>
 ## 📌 Requirements
 
-This module requires **webtrees** version 2.1 or later.
+This module requires **webtrees** version 2.2 or later.
 It has the same system requirements as [webtrees](https://github.com/fisharebest/webtrees#system-requirements).
 
 The module depends on the existing webtrees pending-changes log functionality.
@@ -117,7 +115,6 @@ The table labels and change-log status texts are taken from webtrees' existing t
 ## ❓ Support
 
 * <span style="font-weight: bold;">Maintainer: </span>Current responsibility and maintenance are handled by Hermann Hartenthaler.
-* <span style="font-weight: bold;">Original author: </span>The module was originally created by Nigel Osborne for the Our Families website.
 * <span style="font-weight: bold;">Forum: </span>General webtrees support can be found in the [webtrees forum](https://www.webtrees.net/).
 
 <a name="Credits"></a>
@@ -125,7 +122,7 @@ The table labels and change-log status texts are taken from webtrees' existing t
 
 This module was originally created by **Nigel Osborne** for the [Our Families](http://www.our-families.info) website.
 
-The original PDF documentation stated that the Our Families modules were written primarily for Nigel Osborne's own use, were not officially released, but could be shared under the same GPL as webtrees itself.
+The [original PDF documentation](docs/individual-changes-tab.pdf) stated that the Our Families modules were written primarily for Nigel Osborne's own use, were not officially released, but could be shared under the same GPL as webtrees itself.
 It also stated that there was no guarantee of ongoing updates, maintenance, modifications, or support.
 
 Current responsibility and maintenance are handled by **Hermann Hartenthaler**.
