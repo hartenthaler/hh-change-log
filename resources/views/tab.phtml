@@ -2,9 +2,9 @@
 
 use Fisharebest\Webtrees\Http\RequestHandlers\PendingChangesLogData;
 use Fisharebest\Webtrees\Individual;
-use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\Tree;
 use Fisharebest\Webtrees\View;
+use Hartenthaler\Webtrees\ChangeLog\Internationalization\MoreI18N;
 
 /**
  * @var Tree                 $tree
@@ -28,12 +28,12 @@ use Fisharebest\Webtrees\View;
 			<thead>
 				<tr>
 					<th data-visible="false"></th>
-					<th><?= I18N::translate('Timestamp') ?></th>
-					<th><?= I18N::translate('Status') ?></th>
-					<th><?= I18N::translate('Record') ?></th>
-					<th data-sortable="false"><?= I18N::translate('Data') ?></th>
-					<th><?= I18N::translate('User') ?></th>
-					<th><?= I18N::translate('Tree') ?></th>
+					<th><?= MoreI18N::xlate('Timestamp') ?></th>
+					<th><?= MoreI18N::xlate('Status') ?></th>
+					<th><?= MoreI18N::xlate('Record') ?></th>
+					<th data-sortable="false"><?= MoreI18N::xlate('Data') ?></th>
+					<th><?= MoreI18N::xlate('User') ?></th>
+					<th><?= MoreI18N::xlate('Tree') ?></th>
 				</tr>
 			</thead>
 		</table>
