@@ -72,7 +72,7 @@ class ChangeLogTabModule extends AbstractModule implements ModuleTabInterface, M
      */
     public function customModuleVersion(): string
     {
-        return '2.6.6.0';
+        return '2.2.6.0';
     }
 
     /**
