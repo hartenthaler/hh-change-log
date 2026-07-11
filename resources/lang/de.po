@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hh-change-log\n"
 "Report-Msgid-Bugs-To: Hermann Hartenthaler <hermann@hartenthaler.de>\n"
-"POT-Creation-Date: 2026-06-03 00:00+0200\n"
-"PO-Revision-Date: 2026-06-03 00:00+0200\n"
+"POT-Creation-Date: 2026-06-03 11:10+0200\n"
+"PO-Revision-Date: 2026-06-03 11:10+0200\n"
 "Last-Translator: Hermann Hartenthaler <hermann@hartenthaler.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -11,15 +11,15 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit\n"
+"X-Generator: Poedit 3.9\n"
 "X-Poedit-Basepath: ../..\n"
 "X-Poedit-KeywordsList: translate;noop;plural:1,2;translateContext:1c,2\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: ChangeLogTabModule.php:42
+#: ChangeLogTabModule.php:45
 msgid "Changes"
 msgstr "Änderungen"
 
-#: ChangeLogTabModule.php:52
+#: ChangeLogTabModule.php:55
 msgid "A tab showing recent GEDCOM data changes for an individual."
 msgstr "Ein Reiter, der die letzten GEDCOM-Datenänderungen für eine Person anzeigt."

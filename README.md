@@ -2,6 +2,8 @@
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
 ![webtrees major version](https://img.shields.io/badge/webtrees-v2.2.x-green)
+[![Latest release](https://img.shields.io/github/v/release/hartenthaler/hh-change-log)](https://github.com/hartenthaler/hh-change-log/releases/latest)
+[![Downloads](https://img.shields.io/github/downloads/hartenthaler/hh-change-log/total)](https://github.com/hartenthaler/hh-change-log/releases)
 
 This [webtrees](https://www.webtrees.net) custom module adds a **Changes** tab to the individual page.
 It shows the change-log entries for the currently viewed individual in a read-only table.

@@ -1,0 +1,11 @@
+# Change Log
+
+## Next release
+
+## 2.2.6.0
+
+- Updated the module for compatibility with webtrees 2.2.6.
+- Added maintained German gettext translations and compiled the corresponding MO catalog.
+- Reused webtrees core translations through the module's `MoreI18N` wrapper instead of duplicating them in the module catalog.
+- Added release and download badges to the README.
+- Corrected the module version from `2.6.6.0` to `2.2.6.0`.
