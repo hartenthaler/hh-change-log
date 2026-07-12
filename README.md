@@ -118,6 +118,7 @@ The table labels and change-log status texts are taken from webtrees' existing t
 There are currently translations for
 
 * German by [@Hartenthaler](https://github.com/Hartenthaler)
+* Dutch by [@TheDutchJewel](https://github.com/TheDutchJewel)
 
 <a name="Support"></a>
 ## ❓ Support
