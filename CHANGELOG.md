@@ -2,7 +2,10 @@
 
 ## Next release
 
+## 2.2.6.2
+
 - Added Dutch translation; thanks to @TheDutchJewel.
+- Revised and streamlined the README documentation.
 
 ## 2.2.6.1
 

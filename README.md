@@ -1,6 +1,7 @@
 # 🌳 **webtrees** module for Change Log (hh-change-log)
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
+
 ![webtrees major version](https://img.shields.io/badge/webtrees-v2.2.x-green)
 [![Latest release](https://img.shields.io/github/v/release/hartenthaler/hh-change-log)](https://github.com/hartenthaler/hh-change-log/releases/latest)
 [![Downloads](https://img.shields.io/github/downloads/hartenthaler/hh-change-log/total)](https://github.com/hartenthaler/hh-change-log/releases)
@@ -58,23 +59,11 @@ The module supports
 * timestamp, status, record, GEDCOM data, user, and tree columns
 * highlighted GEDCOM differences for inserted and deleted data
 * reuse of webtrees' existing translated change-log labels
-* no separate module configuration
 
 <a name="Configuration"></a>
 ## ⚙️ Configuration
 
-Administrators can configure the module in the webtrees control panel under the individual-page tab modules.
-
-The available settings are the standard webtrees tab settings:
-
-* whether the module is enabled
-* the access level of the tab
-* the tab position among the other individual-page tabs
-
-There are no additional module-specific settings.
-
-If the standard webtrees tab with the same visible name is enabled, disable the duplicate tab to avoid confusion.
-This custom module is identifiable in the control panel by its custom-module metadata and author information.
+There are no specific module settings.
 
 <a name="Requirements"></a>
 ## 📌 Requirements
@@ -83,10 +72,11 @@ This module requires **webtrees** version 2.2 or later.
 It has the same system requirements as [webtrees](https://github.com/fisharebest/webtrees#system-requirements).
 
 The module depends on the existing webtrees pending-changes log functionality.
-Because this functionality is manager-only in webtrees, the tab is also manager-only.
 
 <a name="Installation"></a>
 ## 📥 Installation
+Use [Custom Module Manager](https://github.com/Jefferson49/CustomModuleManager)
+for an easy and convenient installation of **webtrees** custom modules.
 
 **Manual installation**:
 
@@ -97,15 +87,13 @@ Because this functionality is manager-only in webtrees, the tab is also manager-
 1. Login to **webtrees** as administrator.
 1. Go to <span class="pointer">Control Panel / Modules / Individual page / Tabs</span>.
 1. Enable the module named **Changes**.
-1. Disable any duplicate standard tab with the same visible name if necessary.
-1. Save the module settings.
 
 <a name="Upgrade"></a>
 ## ⬆️ Upgrade
 
-To update the module, replace the `hh-change-log` files with the files from the latest release or maintained source.
+To update the module, replace the `hh-change-log` files with the files from the latest release
+or maintained source.
 
-Keep a copy of any local modifications before replacing the module files.
 
 <a name="Translation"></a>
 ## 🌍 Translation
@@ -123,7 +111,6 @@ There are currently translations for
 <a name="Support"></a>
 ## ❓ Support
 
-* <span style="font-weight: bold;">Maintainer: </span>Current responsibility and maintenance are handled by Hermann Hartenthaler.
 * <span style="font-weight: bold;">Forum: </span>General webtrees support can be found in the [webtrees forum](https://www.webtrees.net/).
 
 <a name="Credits"></a>
