@@ -16,23 +16,35 @@ namespace Hartenthaler\Webtrees\ChangeLog;
  */
 
 use Fisharebest\Webtrees\Auth;
+use Fisharebest\Webtrees\FlashMessages;
 use Fisharebest\Localization\Translation;
 use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\Individual;
 use Fisharebest\Webtrees\Module\AbstractModule;
 use Fisharebest\Webtrees\Module\ModuleCustomInterface;
 use Fisharebest\Webtrees\Module\ModuleCustomTrait;
+use Fisharebest\Webtrees\Module\ModuleConfigInterface;
+use Fisharebest\Webtrees\Module\ModuleConfigTrait;
 use Fisharebest\Webtrees\Module\ModuleTabInterface;
 use Fisharebest\Webtrees\Module\ModuleTabTrait;
 use Fisharebest\Webtrees\View;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Change-log tab module.
  */
-class ChangeLogTabModule extends AbstractModule implements ModuleTabInterface, ModuleCustomInterface
+class ChangeLogTabModule extends AbstractModule implements ModuleTabInterface, ModuleCustomInterface, ModuleConfigInterface
 {
+    use ModuleConfigTrait;
     use ModuleCustomTrait;
     use ModuleTabTrait;
+
+    private const PREF_DATE_RANGE = 'date_range';
+    private const PREF_MAXIMUM_NUMBER = 'maximum_number';
+    private const PREF_GEDCOM_DETAILS = 'gedcom_details';
+    private const PREF_SHOW_USER = 'show_user';
+    private const PREF_SHOW_TREE = 'show_tree';
 
     /**
      * How should this module be identified in the control panel, etc.?
@@ -71,7 +83,7 @@ class ChangeLogTabModule extends AbstractModule implements ModuleTabInterface, M
      */
     public function customModuleVersion(): string
     {
-        return '2.2.6.2';
+        return '2.2.6.3';
     }
 
     /**
@@ -197,13 +209,64 @@ class ChangeLogTabModule extends AbstractModule implements ModuleTabInterface, M
             return '';
         }
 
+		$dateRange = $this->positiveIntegerPreference(self::PREF_DATE_RANGE);
+		$maximumNumber = $this->positiveIntegerPreference(self::PREF_MAXIMUM_NUMBER);
+
 		return view(
 			$this->name() . '::tab',
 			[
 				'individual'             => $individual,
 				'tree'                   => $individual->tree(),
 				'xref'                   => $individual->xref(),
+				'from'                   => $dateRange === null ? '' : date('Y-m-d', strtotime('-' . $dateRange . ' days')),
+				'maximum_number'         => $maximumNumber,
+				'gedcom_expanded'        => $this->getPreference(self::PREF_GEDCOM_DETAILS, 'expand') !== 'collapse',
+				'show_user'              => $this->getPreference(self::PREF_SHOW_USER, 'hide') === 'show',
+				'show_tree'              => $this->getPreference(self::PREF_SHOW_TREE, 'hide') === 'show',
 			]);
+    }
+
+    public function getAdminAction(ServerRequestInterface $request): ResponseInterface
+    {
+        $this->layout = 'layouts/administration';
+
+        return $this->viewResponse($this->name() . '::settings', [
+            'title' => $this->title(),
+            'date_range' => (string) ($this->positiveIntegerPreference(self::PREF_DATE_RANGE) ?? ''),
+            'maximum_number' => (string) ($this->positiveIntegerPreference(self::PREF_MAXIMUM_NUMBER) ?? ''),
+            'gedcom_details' => $this->getPreference(self::PREF_GEDCOM_DETAILS, 'expand') === 'collapse' ? 'collapse' : 'expand',
+            'show_user' => $this->getPreference(self::PREF_SHOW_USER, 'hide') === 'show' ? 'show' : 'hide',
+            'show_tree' => $this->getPreference(self::PREF_SHOW_TREE, 'hide') === 'show' ? 'show' : 'hide',
+        ]);
+    }
+
+    public function postAdminAction(ServerRequestInterface $request): ResponseInterface
+    {
+        $params = (array) $request->getParsedBody();
+
+        $this->setPreference(self::PREF_DATE_RANGE, $this->validatedPositiveInteger($params['date_range'] ?? ''));
+        $this->setPreference(self::PREF_MAXIMUM_NUMBER, $this->validatedPositiveInteger($params['maximum_number'] ?? ''));
+        $this->setPreference(self::PREF_GEDCOM_DETAILS, ($params['gedcom_details'] ?? '') === 'collapse' ? 'collapse' : 'expand');
+        $this->setPreference(self::PREF_SHOW_USER, ($params['show_user'] ?? '') === 'show' ? 'show' : 'hide');
+        $this->setPreference(self::PREF_SHOW_TREE, ($params['show_tree'] ?? '') === 'show' ? 'show' : 'hide');
+
+        FlashMessages::addMessage(I18N::translate('The display settings have been updated.'), 'success');
+
+        return redirect($this->getConfigLink());
+    }
+
+    private function positiveIntegerPreference(string $preference): ?int
+    {
+        $value = $this->validatedPositiveInteger($this->getPreference($preference, ''));
+
+        return $value === '' ? null : (int) $value;
+    }
+
+    private function validatedPositiveInteger(mixed $value): string
+    {
+        $value = trim((string) $value);
+
+        return ctype_digit($value) && (int) $value > 0 ? (string) (int) $value : '';
     }
 	/**
 	 *  Constructor.

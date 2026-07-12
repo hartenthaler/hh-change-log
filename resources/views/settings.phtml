@@ -1,0 +1,74 @@
+<?php
+
+declare(strict_types=1);
+
+use Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;
+use Fisharebest\Webtrees\I18N;
+use Hartenthaler\Webtrees\ChangeLog\Internationalization\MoreI18N;
+
+/**
+ * @var string $title
+ * @var string $date_range
+ * @var string $maximum_number
+ * @var string $gedcom_details
+ * @var string $show_user
+ * @var string $show_tree
+ */
+?>
+
+<?= view('components/breadcrumbs', [
+    'links' => [route(ControlPanel::class) => MoreI18N::xlate('Control panel'), $title],
+]) ?>
+
+<h1><?= e($title) ?></h1>
+
+<form method="post">
+    <?= csrf_field() ?>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="date-range"><?= I18N::translate('Default date range') ?></label>
+        <div class="col-sm-9">
+            <div class="input-group">
+                <input class="form-control" id="date-range" name="date_range" type="number" min="1" step="1" value="<?= e($date_range) ?>">
+                <span class="input-group-text"><?= I18N::translate('days') ?></span>
+            </div>
+            <div class="form-text"><?= I18N::translate('Leave empty to show changes from any date.') ?></div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="maximum-number"><?= I18N::translate('Maximum number of entries') ?></label>
+        <div class="col-sm-9">
+            <input class="form-control" id="maximum-number" name="maximum_number" type="number" min="1" step="1" value="<?= e($maximum_number) ?>">
+            <div class="form-text"><?= I18N::translate('Leave empty to show all entries.') ?></div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="gedcom-details"><?= I18N::translate('GEDCOM details by default') ?></label>
+        <div class="col-sm-9">
+            <?= view('components/select', [
+                'id' => 'gedcom-details',
+                'name' => 'gedcom_details',
+                'selected' => $gedcom_details,
+                'options' => ['expand' => I18N::translate('Expand'), 'collapse' => I18N::translate('Collapse')],
+            ]) ?>
+        </div>
+    </div>
+
+    <?php foreach (['show_user' => I18N::translate('User column'), 'show_tree' => I18N::translate('Family tree column')] as $name => $label) : ?>
+        <div class="row mb-3">
+            <label class="col-sm-3 col-form-label" for="<?= e(str_replace('_', '-', $name)) ?>"><?= $label ?></label>
+            <div class="col-sm-9">
+                <?= view('components/select', [
+                    'id' => str_replace('_', '-', $name),
+                    'name' => $name,
+                    'selected' => $$name,
+                    'options' => ['hide' => MoreI18N::xlate('Hide'), 'show' => MoreI18N::xlate('Show')],
+                ]) ?>
+            </div>
+        </div>
+    <?php endforeach ?>
+
+    <button class="btn btn-primary" type="submit"><?= MoreI18N::xlate('save') ?></button>
+</form>
