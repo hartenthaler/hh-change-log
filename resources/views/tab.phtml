@@ -3,12 +3,19 @@
 use Fisharebest\Webtrees\Http\RequestHandlers\PendingChangesLogData;
 use Fisharebest\Webtrees\Individual;
 use Fisharebest\Webtrees\Tree;
+use Fisharebest\Webtrees\I18N;
+use Fisharebest\Webtrees\View;
 use Hartenthaler\Webtrees\ChangeLog\Internationalization\MoreI18N;
 
 /**
  * @var Tree                 $tree
  * @var Individual           $individual
  * @var string               $xref
+ * @var string               $from
+ * @var int|null             $maximum_number
+ * @var bool                 $gedcom_expanded
+ * @var bool                 $show_user
+ * @var bool                 $show_tree
  */
 
 ?>
@@ -18,10 +25,11 @@ use Hartenthaler\Webtrees\ChangeLog\Internationalization\MoreI18N;
 		<table
 			class="of-changes table table-bordered table-sm datatables d-none"
 			<?= view('lists/datatables-attributes') ?>
-			data-ajax="<?= route(PendingChangesLogData::class, ['xref' => $xref, 'tree' => $tree->name()]) ?>"
+			data-ajax="<?= route(PendingChangesLogData::class, ['from' => $from, 'xref' => $xref, 'tree' => $tree->name()]) ?>"
 			data-searching="false"
 			data-server-side="true"
 			data-sorting="<?= e('[[ 0, "desc" ]]') ?>"
+			data-maximum-number="<?= e($maximum_number ?? 0) ?>"
 		>
 			<thead>
 				<tr>
@@ -30,11 +38,47 @@ use Hartenthaler\Webtrees\ChangeLog\Internationalization\MoreI18N;
 					<th><?= MoreI18N::xlate('Status') ?></th>
 					<th><?= MoreI18N::xlate('Record') ?></th>
 					<th data-sortable="false"><?= MoreI18N::xlate('Data') ?></th>
-					<th><?= MoreI18N::xlate('User') ?></th>
-					<th><?= MoreI18N::xlate('Tree') ?></th>
+					<th data-visible="<?= $show_user ? 'true' : 'false' ?>"><?= MoreI18N::xlate('User') ?></th>
+					<th data-visible="<?= $show_tree ? 'true' : 'false' ?>"><?= MoreI18N::xlate('Tree') ?></th>
 				</tr>
 			</thead>
 		</table>
 	</div>
 </div>
+
+<?php View::push('javascript') ?>
+<script>
+$(document).on('preXhr.dt', '.of-changes', function (event, settings, data) {
+    const maximum = Number(this.dataset.maximumNumber);
+
+    if (maximum > 0) {
+        const remaining = Math.max(0, maximum - data.start);
+        data.length = data.length < 0 ? remaining : Math.min(data.length, remaining);
+    }
+});
+
+$(document).on('xhr.dt', '.of-changes', function (event, settings, json) {
+    const maximum = Number(this.dataset.maximumNumber);
+
+    if (maximum > 0 && json) {
+        json.data = json.data.slice(0, Math.max(0, maximum - Number(settings._iDisplayStart ?? 0)));
+        json.recordsTotal = Math.min(Number(json.recordsTotal), maximum);
+        json.recordsFiltered = Math.min(Number(json.recordsFiltered), maximum);
+    }
+});
+
+$(document).on('draw.dt', '.of-changes', function () {
+    this.querySelectorAll('.gedcom-data:not([data-hh-change-log-details])').forEach(function (content) {
+        const details = document.createElement('details');
+        const summary = document.createElement('summary');
+
+        details.dataset.hhChangeLogDetails = '';
+        details.open = <?= $gedcom_expanded ? 'true' : 'false' ?>;
+        summary.textContent = <?= json_encode(I18N::translate('GEDCOM details'), JSON_THROW_ON_ERROR) ?>;
+        content.replaceWith(details);
+        details.append(summary, content);
+    });
+});
+</script>
+<?php View::endpush() ?>
 

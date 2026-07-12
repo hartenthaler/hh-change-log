@@ -2,6 +2,13 @@
 
 ## Next release
 
+## 2.2.6.3
+
+- Added compact display settings for an optional date range and maximum entry count.
+- Added per-entry expand/collapse controls for GEDCOM details.
+- Added settings to show or hide the user and family-tree columns.
+- Switched the module stylesheet to standard webtrees asset loading.
+
 ## 2.2.6.2
 
 - Added Dutch translation; thanks to @TheDutchJewel.

@@ -23,3 +23,51 @@ msgstr "Änderungen"
 #: ChangeLogTabModule.php:55
 msgid "A tab showing recent GEDCOM data changes for an individual."
 msgstr "Ein Reiter, der die letzten GEDCOM-Datenänderungen für eine Person anzeigt."
+
+#: ChangeLogTabModule.php
+msgid "The display settings have been updated."
+msgstr "Die Anzeigeeinstellungen wurden aktualisiert."
+
+#: resources/views/settings.phtml
+msgid "Default date range"
+msgstr "Standardzeitraum"
+
+#: resources/views/settings.phtml
+msgid "days"
+msgstr "Tage"
+
+#: resources/views/settings.phtml
+msgid "Leave empty to show changes from any date."
+msgstr "Leer lassen, um Änderungen aus jedem Zeitraum anzuzeigen."
+
+#: resources/views/settings.phtml
+msgid "Maximum number of entries"
+msgstr "Maximale Anzahl von Einträgen"
+
+#: resources/views/settings.phtml
+msgid "Leave empty to show all entries."
+msgstr "Leer lassen, um alle Einträge anzuzeigen."
+
+#: resources/views/settings.phtml resources/views/tab.phtml
+msgid "GEDCOM details"
+msgstr "GEDCOM-Details"
+
+#: resources/views/settings.phtml
+msgid "GEDCOM details by default"
+msgstr "GEDCOM-Details standardmäßig"
+
+#: resources/views/settings.phtml
+msgid "Expand"
+msgstr "Aufklappen"
+
+#: resources/views/settings.phtml
+msgid "Collapse"
+msgstr "Zuklappen"
+
+#: resources/views/settings.phtml
+msgid "User column"
+msgstr "Benutzerspalte"
+
+#: resources/views/settings.phtml
+msgid "Family tree column"
+msgstr "Stammbaumspalte"
