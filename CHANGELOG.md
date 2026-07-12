@@ -2,6 +2,8 @@
 
 ## Next release
 
+- Added Dutch translation; thanks to @TheDutchJewel.
+
 ## 2.2.6.1
 
 - Updated the module for compatibility with webtrees 2.2.6.
