@@ -106,6 +106,7 @@ class ChangeLogTabModule extends AbstractModule implements ModuleTabInterface, M
     {
         $languageFile = match ($language) {
             'de'    => 'de',
+            'nl'    => 'nl',
             default => '',
         };
 
