@@ -25,6 +25,8 @@ use Fisharebest\Webtrees\Module\ModuleCustomInterface;
 use Fisharebest\Webtrees\Module\ModuleCustomTrait;
 use Fisharebest\Webtrees\Module\ModuleConfigInterface;
 use Fisharebest\Webtrees\Module\ModuleConfigTrait;
+use Fisharebest\Webtrees\Module\ModuleGlobalInterface;
+use Fisharebest\Webtrees\Module\ModuleGlobalTrait;
 use Fisharebest\Webtrees\Module\ModuleTabInterface;
 use Fisharebest\Webtrees\Module\ModuleTabTrait;
 use Fisharebest\Webtrees\View;
@@ -34,10 +36,11 @@ use Psr\Http\Message\ServerRequestInterface;
 /**
  * Change-log tab module.
  */
-class ChangeLogTabModule extends AbstractModule implements ModuleTabInterface, ModuleCustomInterface, ModuleConfigInterface
+class ChangeLogTabModule extends AbstractModule implements ModuleTabInterface, ModuleCustomInterface, ModuleConfigInterface, ModuleGlobalInterface
 {
     use ModuleConfigTrait;
     use ModuleCustomTrait;
+    use ModuleGlobalTrait;
     use ModuleTabTrait;
 
     private const PREF_DATE_RANGE = 'date_range';
@@ -83,7 +86,7 @@ class ChangeLogTabModule extends AbstractModule implements ModuleTabInterface, M
      */
     public function customModuleVersion(): string
     {
-        return '2.2.6.3';
+        return '2.2.6.4';
     }
 
     /**

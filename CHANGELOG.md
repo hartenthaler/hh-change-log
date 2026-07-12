@@ -2,6 +2,10 @@
 
 ## Next release
 
+## 2.2.6.4
+
+- Fixed stylesheet registration so GEDCOM lines and inserted/deleted data are formatted and highlighted again.
+
 ## 2.2.6.3
 
 - Added compact display settings for an optional date range and maximum entry count.
