@@ -25,7 +25,6 @@ use Fisharebest\Webtrees\Module\ModuleCustomTrait;
 use Fisharebest\Webtrees\Module\ModuleTabInterface;
 use Fisharebest\Webtrees\Module\ModuleTabTrait;
 use Fisharebest\Webtrees\View;
-use Psr\Http\Message\ResponseInterface;
 
 /**
  * Change-log tab module.
@@ -175,15 +174,11 @@ class ChangeLogTabModule extends AbstractModule implements ModuleTabInterface, M
     }
 
     /**
-     * @return ResponseInterface
+     * Add the module stylesheet to the page head.
      */
-    public function getCssAction(): ResponseInterface
+    public function headContent(): string
     {
-        return response(
-            file_get_contents($this->resourcesFolder() . 'css/hh-change-log.min.css'),
-            200,
-            ['content-type' => 'text/css']
-        );
+        return '<link rel="stylesheet" href="' . e($this->assetUrl('css/hh-change-log.min.css')) . '">';
     }
 
 	/**
@@ -208,7 +203,6 @@ class ChangeLogTabModule extends AbstractModule implements ModuleTabInterface, M
 				'individual'             => $individual,
 				'tree'                   => $individual->tree(),
 				'xref'                   => $individual->xref(),
-				'hh_change_log_css'      => route('module', ['module' => $this->name(), 'action' => 'Css']),
 			]);
     }
 	/**
