@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: hh-change-log\n"
 "Report-Msgid-Bugs-To: Hermann Hartenthaler <hermann@hartenthaler.de>\n"
 "POT-Creation-Date: 2026-06-03 11:10+0200\n"
-"PO-Revision-Date: 2026-07-12 20:14+0200\n"
+"PO-Revision-Date: 2026-07-13 10:01+0200\n"
 "Last-Translator: TheDutchJewel <thedutchjewel@gmail.com>\n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -54,7 +54,7 @@ msgstr "GEDCOM-details"
 
 #: resources/views/settings.phtml
 msgid "GEDCOM details by default"
-msgstr "GEDCOM-details standaard weergeven"
+msgstr "GEDCOM-details standaard"
 
 #: resources/views/settings.phtml
 msgid "Expand"
