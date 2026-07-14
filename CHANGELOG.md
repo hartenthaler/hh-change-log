@@ -2,6 +2,8 @@
 
 ## Next release
 
+- Updated Dutch translations; thanks to @TheDutchJewel.
+
 ## 2.2.6.4
 
 - Fixed stylesheet registration so GEDCOM lines and inserted/deleted data are formatted and highlighted again.
