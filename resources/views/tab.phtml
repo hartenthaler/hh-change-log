@@ -68,7 +68,7 @@ use Hartenthaler\Webtrees\ChangeLog\Internationalization\MoreI18N;
 		<table
 			class="of-changes table table-bordered table-sm d-none"
 			<?= view('lists/datatables-attributes') ?>
-			data-ajax="<?= route(PendingChangesLogData::class, ['tree' => $tree->name()]) ?>"
+			data-ajax="<?= route(PendingChangesLogData::class, ['tree' => $tree->name(), 'xref' => $xref]) ?>"
 			data-gedcom-details-label="<?= e(I18N::translate('GEDCOM details')) ?>"
 			data-gedcom-expanded="<?= $gedcom_expanded ? 'true' : 'false' ?>"
 			data-status-labels="<?= e(json_encode([
@@ -101,6 +101,9 @@ use Hartenthaler\Webtrees\ChangeLog\Internationalization\MoreI18N;
 				'empty' => I18N::translate('Empty value'),
 			], JSON_THROW_ON_ERROR)) ?>"
 			data-xref="<?= e($xref) ?>"
+			data-show-record="<?= $show_record ? 'true' : 'false' ?>"
+			data-show-tree="<?= $show_tree ? 'true' : 'false' ?>"
+			data-show-user="<?= $show_user ? 'true' : 'false' ?>"
 			data-searching="false"
 			data-server-side="true"
 			data-sorting="<?= e('[[ 0, "desc" ]]') ?>"

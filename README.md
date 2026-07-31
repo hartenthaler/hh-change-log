@@ -9,9 +9,6 @@
 This [webtrees](https://www.webtrees.net) custom module adds a **Changes** tab to the individual page.
 It shows the change-log entries for the currently viewed individual in a read-only table.
 
-The module was originally created by **Nigel Osborne** for the [Our Families](http://www.our-families.info) website.
-Current responsibility and maintenance are handled by **Hermann Hartenthaler**.
-
 <a name="Contents"></a>
 ## 📚 Contents
 
@@ -139,12 +136,9 @@ There are currently translations for
 <a name="Credits"></a>
 ## 🙏 Credits
 
-This module was originally created by **Nigel Osborne** for the [Our Families](http://www.our-families.info) website.
+**Nigel Osborne** originally developed this module for the [Our Families](http://www.our-families.info) website. The [original PDF documentation](docs/individual-changes-tab.pdf) explains that the Our Families modules were created primarily for his own use and were not formally released. They could nevertheless be shared under the same GPL as webtrees, without any commitment to future updates, modifications, maintenance, or support.
 
-The [original PDF documentation](docs/individual-changes-tab.pdf) stated that the Our Families modules were written primarily for Nigel Osborne's own use, were not officially released, but could be shared under the same GPL as webtrees itself.
-It also stated that there was no guarantee of ongoing updates, maintenance, modifications, or support.
-
-Current responsibility and maintenance are handled by **Hermann Hartenthaler**.
+Since 2026, **Hermann Hartenthaler** has maintained and further developed the module for current webtrees versions.
 
 <a name="License"></a>
 ## 📄 License

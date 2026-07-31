@@ -32,14 +32,6 @@ function createTable() {
             this.details = details;
         },
     };
-    const statusCell = {
-        dataset: {},
-        textContent: 'pending',
-        replaceChildren(indicator) {
-            this.indicator = indicator;
-        },
-    };
-
     return {
         classList: {remove() {}},
         dataset: {
@@ -47,6 +39,9 @@ function createTable() {
             gedcomDetailsLabel: 'GEDCOM details',
             gedcomExpanded: 'false',
             maximumNumber: '15',
+            showRecord: 'false',
+            showTree: 'false',
+            showUser: 'true',
             statusLabels: JSON.stringify({accepted: 'accepted', pending: 'pending', rejected: 'rejected'}),
             summaryLabels: JSON.stringify({'BIRT:PLAC': 'Birth place', NAME: 'Name', SEX: 'Sex'}),
             summaryText: JSON.stringify({
@@ -59,12 +54,11 @@ function createTable() {
             }),
             xref: 'I1',
         },
-        querySelectorAll(selector) {
-            return selector === 'tbody tr' ? [{cells: [{}, {}, statusCell]}] : [gedcomContent, unknownContent, complexContent];
+        querySelectorAll() {
+            return [gedcomContent, unknownContent, complexContent];
         },
         complexContent,
         gedcomContent,
-        statusCell,
         unknownContent,
     };
 }
@@ -177,7 +171,8 @@ function run(version) {
     assert.equal(new URL(options.ajax.url).searchParams.get('from'), '2026-01-01');
 
     const request = {length: 25, start: 10};
-    options.ajax.data(request);
+    const submittedRequest = options.ajax.data(request);
+    assert.equal(submittedRequest, request);
     assert.equal(request.from, '2026-01-01');
     assert.equal(request.to, '');
     assert.equal(request.type, '');
@@ -192,11 +187,21 @@ function run(version) {
     assert.equal(response.recordsFiltered, 15);
     assert.equal(response.recordsTotal, 15);
 
+    const columnDefinition = (target) => options.columnDefs.find((definition) => definition.targets === target);
+    assert.equal(columnDefinition(0).visible, false);
+    assert.equal(columnDefinition(3).visible, false);
+    assert.equal(columnDefinition(4).visible, true);
+    assert.equal(columnDefinition(5).visible, true);
+    assert.equal(columnDefinition(6).visible, false);
+
+    const statusRenderer = columnDefinition(2).render;
+    const statusIndicator = statusRenderer('pending', 'display');
+    assert.match(statusIndicator, /hh-change-log-status--pending/);
+    assert.match(statusIndicator, /aria-label="pending"/);
+    assert.match(statusIndicator, /title="pending"/);
+    assert.equal(statusRenderer('pending', 'sort'), 'pending');
+
     options.drawCallback();
-    assert.equal(table.statusCell.indicator.className, 'hh-change-log-status hh-change-log-status--pending');
-    assert.equal(table.statusCell.indicator.title, 'pending');
-    assert.equal(table.statusCell.indicator['aria-label'], 'pending');
-    assert.equal(table.statusCell.indicator.role, 'img');
 
     const humanSummary = table.gedcomContent.details.beforeElement;
     assert.equal(humanSummary.className, 'hh-change-log-summary');
