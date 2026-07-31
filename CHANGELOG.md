@@ -14,6 +14,10 @@
 - Added a filter reset action that reloads the unfiltered change history for the individual.
 - Added localized human-readable summaries for unambiguous changes to common GEDCOM facts.
 - Kept the complete raw GEDCOM diff available for summarized changes and used it as the fallback for complex or unknown structures.
+- Fixed the individual filter so the INDI xref is sent in both the query string and POST data for webtrees 2.2/2.3 compatibility.
+- Fixed status indicators being rendered in the wrong visible column when other columns were hidden.
+- Applied the configured column visibility explicitly: GEDCOM data is always visible, the user is shown by default, and record/tree columns are hidden by default.
+- Moved the module history from the README introduction into a revised Credits section.
 
 ## 2.2.6.4
 

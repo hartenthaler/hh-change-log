@@ -10,6 +10,7 @@
     const filterValue = (name) => filters?.elements.namedItem(name)?.value.trim() ?? '';
     const summaryLabels = JSON.parse(table.dataset.summaryLabels ?? '{}');
     const summaryText = JSON.parse(table.dataset.summaryText ?? '{}');
+    const statusLabels = JSON.parse(table.dataset.statusLabels ?? '{}');
     const ajaxUrl = () => {
         const url = new URL(table.dataset.ajax, document.baseURI);
 
@@ -26,6 +27,26 @@
         });
 
         return url.toString();
+    };
+
+    const escapeAttribute = (value) => String(value).replace(/[&<>"']/g, (character) => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;',
+    })[character]);
+
+    const renderStatus = (data, type) => {
+        if (type !== 'display') {
+            return data;
+        }
+
+        const label = String(data);
+        const status = Object.keys(statusLabels).find((key) => statusLabels[key] === label) ?? 'unknown';
+        const escapedLabel = escapeAttribute(label);
+
+        return `<span class="hh-change-log-status hh-change-log-status--${status}" aria-label="${escapedLabel}" role="img" title="${escapedLabel}"></span>`;
     };
 
     const parseGedcomLines = (content) => {
@@ -186,7 +207,6 @@
         table.dataset.hhChangeLogInitialized = '';
 
         const maximum = Number(table.dataset.maximumNumber);
-        const statusLabels = JSON.parse(table.dataset.statusLabels ?? '{}');
         let dataTable;
         let requestStart = 0;
 
@@ -205,6 +225,8 @@
                         const remaining = Math.max(0, maximum - requestStart);
                         data.length = Number(data.length) < 0 ? remaining : Math.min(Number(data.length), remaining);
                     }
+
+                    return data;
                 },
                 dataSrc: (json) => {
                     if (maximum > 0 && json) {
@@ -216,6 +238,14 @@
                     return json.data;
                 },
             },
+            columnDefs: [
+                {targets: 0, visible: false},
+                {render: renderStatus, targets: 2},
+                {targets: 3, visible: table.dataset.showRecord === 'true'},
+                {orderable: false, targets: 4, visible: true},
+                {targets: 5, visible: table.dataset.showUser === 'true'},
+                {targets: 6, visible: table.dataset.showTree === 'true'},
+            ],
             drawCallback: () => {
                 table.querySelectorAll('.gedcom-data:not([data-hh-change-log-details])').forEach((content) => {
                     const details = document.createElement('details');
@@ -232,24 +262,6 @@
                     details.append(summary, content);
                 });
 
-                table.querySelectorAll('tbody tr').forEach((row) => {
-                    const statusCell = row.cells[2];
-
-                    if (statusCell === undefined || statusCell.dataset.hhChangeLogStatus !== undefined) {
-                        return;
-                    }
-
-                    const label = statusCell.textContent.trim();
-                    const status = Object.keys(statusLabels).find((key) => statusLabels[key] === label) ?? 'unknown';
-                    const indicator = document.createElement('span');
-
-                    statusCell.dataset.hhChangeLogStatus = '';
-                    indicator.className = `hh-change-log-status hh-change-log-status--${status}`;
-                    indicator.setAttribute('aria-label', label);
-                    indicator.setAttribute('role', 'img');
-                    indicator.title = label;
-                    statusCell.replaceChildren(indicator);
-                });
             },
             order: [[0, 'desc']],
             searching: false,
