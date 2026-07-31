@@ -17,6 +17,8 @@ namespace Hartenthaler\Webtrees\ChangeLog;
 
 use Fisharebest\Webtrees\Auth;
 use Fisharebest\Webtrees\FlashMessages;
+use Fisharebest\Webtrees\Http\Exceptions\HttpAccessDeniedException;
+use Fisharebest\Webtrees\Http\RequestHandlers\PendingChangesLogData;
 use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\Individual;
 use Fisharebest\Webtrees\Module\AbstractModule;
@@ -28,6 +30,8 @@ use Fisharebest\Webtrees\Module\ModuleGlobalInterface;
 use Fisharebest\Webtrees\Module\ModuleGlobalTrait;
 use Fisharebest\Webtrees\Module\ModuleTabInterface;
 use Fisharebest\Webtrees\Module\ModuleTabTrait;
+use Fisharebest\Webtrees\Registry;
+use Fisharebest\Webtrees\Validator;
 use Fisharebest\Webtrees\View;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -91,7 +95,7 @@ class ChangeLogTabModule extends AbstractModule implements ModuleTabInterface, M
      */
     public function customModuleVersion(): string
     {
-        return '2.2.6.4';
+        return '2.2.6.5';
     }
 
     /**
@@ -247,6 +251,7 @@ class ChangeLogTabModule extends AbstractModule implements ModuleTabInterface, M
 			$this->name() . '::tab',
 			[
 				'individual'             => $individual,
+				'module_name'            => $this->name(),
 				'tree'                   => $individual->tree(),
 				'xref'                   => $individual->xref(),
 				'from'                   => $dateRange === null ? '' : date('Y-m-d', strtotime('-' . $dateRange . ' days')),
@@ -256,6 +261,38 @@ class ChangeLogTabModule extends AbstractModule implements ModuleTabInterface, M
 				'show_record'            => $this->getPreference(self::PREF_SHOW_RECORD, self::DEFAULT_SHOW_RECORD) === 'show',
 				'show_tree'              => $this->getPreference(self::PREF_SHOW_TREE, self::DEFAULT_SHOW_TREE) === 'show',
 			]);
+	}
+
+    public function getDataAction(ServerRequestInterface $request): ResponseInterface
+    {
+        return $this->changeLogData($request);
+    }
+
+    public function postDataAction(ServerRequestInterface $request): ResponseInterface
+    {
+        return $this->changeLogData($request);
+    }
+
+    private function changeLogData(ServerRequestInterface $request): ResponseInterface
+    {
+        $tree = Validator::attributes($request)->tree();
+
+        if (!Auth::isManager($tree)) {
+            throw new HttpAccessDeniedException();
+        }
+
+        $order = [['column' => 0, 'dir' => 'desc']];
+        $query = $request->getQueryParams();
+        $body  = (array) $request->getParsedBody();
+
+        $query['order'] = $order;
+        $body['order']  = $order;
+
+        $request = $request
+            ->withQueryParams($query)
+            ->withParsedBody($body);
+
+        return Registry::container()->get(PendingChangesLogData::class)->handle($request);
     }
 
     public function getAdminAction(ServerRequestInterface $request): ResponseInterface

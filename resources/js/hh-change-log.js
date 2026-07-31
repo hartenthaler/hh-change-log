@@ -55,7 +55,7 @@
         let change = null;
 
         const pushLine = () => {
-            const match = text.match(/^(\d+)\s+([A-Z0-9_]+)(?:\s+(.*))?$/);
+            const match = text.match(/^(\d+)\s+(?:@[^@\s]+@\s+)?([A-Z0-9_]+)(?:\s+(.*))?$/);
 
             lines.push(match === null ? {text, change} : {
                 text,
@@ -208,14 +208,104 @@
         return summary;
     };
 
+    const createSubstructureSummary = (line) => {
+        const summary = document.createElement('div');
+        const title = document.createElement('span');
+        const pattern = line.change === 'new' ? summaryText.addedSubstructure : summaryText.removedSubstructure;
+
+        summary.className = 'hh-change-log-summary';
+        title.className = 'hh-change-log-summary__title';
+        title.textContent = formatSummaryText(pattern, line.label);
+        summary.append(title);
+
+        return summary;
+    };
+
+    const createStandaloneSummary = (text) => {
+        const summary = document.createElement('div');
+        const title = document.createElement('span');
+
+        summary.className = 'hh-change-log-summary';
+        title.className = 'hh-change-log-summary__title';
+        title.textContent = text;
+        summary.append(title);
+
+        return summary;
+    };
+
     const createSummaries = (content) => {
         const lines = parseGedcomLines(content);
-        const changes = lines
-            .map((line, index) => ({...line, index, label: summaryLabel(lines, index)}))
+        let ignoredLevel = null;
+        const annotatedLines = lines.map((line, index) => {
+            if (line.level !== undefined && ignoredLevel !== null && line.level <= ignoredLevel) {
+                ignoredLevel = null;
+            }
+
+            if (line.level === 1 && line.tag === 'CHAN') {
+                ignoredLevel = line.level;
+            }
+
+            return {
+                ...line,
+                ignored: ignoredLevel !== null,
+                index,
+                label: summaryLabel(lines, index),
+            };
+        });
+        const coveredIndexes = new Set();
+        const summaries = [];
+        const recordLines = annotatedLines.filter((line) => !line.ignored && line.level !== undefined);
+
+        if (recordLines.length > 0
+            && recordLines[0].level === 0
+            && recordLines[0].tag === 'INDI'
+            && recordLines.every((line) => line.change === 'new')
+        ) {
+            return [createStandaloneSummary(summaryText.personCreated)];
+        }
+
+        annotatedLines.forEach((line, index) => {
+            if (line.ignored
+                || line.level !== 1
+                || line.label === null
+                || (line.change !== 'old' && line.change !== 'new')
+            ) {
+                return;
+            }
+
+            let following = index + 1;
+
+            while (following < annotatedLines.length
+                && annotatedLines[following].level !== undefined
+                && annotatedLines[following].level > line.level
+            ) {
+                following += 1;
+            }
+
+            const descendants = annotatedLines.slice(index + 1, following);
+
+            if (descendants.length === 0 || descendants.some((descendant) => descendant.change !== line.change)) {
+                return;
+            }
+
+            for (let covered = index; covered < following; covered += 1) {
+                coveredIndexes.add(covered);
+            }
+
+            summaries.push(createSubstructureSummary(line));
+        });
+
+        const changes = annotatedLines
+            .filter((line) => !line.ignored)
+            .filter((line) => !coveredIndexes.has(line.index))
             .filter((line) => (line.change === 'old' || line.change === 'new') && !isStructuralChange(lines, line.index));
 
-        if (changes.length === 0 || changes.some((line) => line.label === null)) {
+        if (changes.some((line) => line.label === null)) {
             return [];
+        }
+
+        if (changes.length === 0) {
+            return summaries;
         }
 
         const groups = new Map();
@@ -231,8 +321,6 @@
         if (Array.from(groups.values()).some((group) => group.old.length > 1 || group.new.length > 1)) {
             return [];
         }
-
-        const summaries = [];
 
         for (const group of groups.values()) {
             const summary = createSummary(group.old[0], group.new[0]);
@@ -270,7 +358,9 @@
         const options = {
             ajax: {
                 url: ajaxUrl(),
-                type: 'POST',
+                // webtrees 2.2 reads DataTables parameters from the query string;
+                // webtrees 2.3 reads them from the POST body.
+                type: supportsDataTables2 ? 'POST' : 'GET',
                 data: (data) => {
                     requestStart = Number(data.start ?? 0);
                     data.xref = table.dataset.xref;

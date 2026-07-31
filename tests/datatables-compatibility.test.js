@@ -12,6 +12,10 @@ function createTable() {
             {nodeType: 1, tagName: 'DEL', textContent: '2 PLAC Berlin'},
             {nodeType: 3, textContent: '\n'},
             {nodeType: 1, tagName: 'INS', textContent: '2 PLAC Hamburg'},
+            {nodeType: 3, textContent: '\n1 CHAN\n'},
+            {nodeType: 1, tagName: 'DEL', textContent: '2 DATE 31 JUL 2026'},
+            {nodeType: 3, textContent: '\n'},
+            {nodeType: 1, tagName: 'INS', textContent: '2 DATE 1 AUG 2026'},
         ],
         replaceWith(details) {
             this.details = details;
@@ -51,6 +55,70 @@ function createTable() {
             this.details = details;
         },
     };
+    const chanOnlyContent = {
+        dataset: {},
+        childNodes: [
+            {nodeType: 3, textContent: '0 @I1@ INDI\n1 CHAN\n'},
+            {nodeType: 1, tagName: 'DEL', textContent: '2 DATE 31 JUL 2026'},
+            {nodeType: 3, textContent: '\n'},
+            {nodeType: 1, tagName: 'INS', textContent: '2 DATE 1 AUG 2026'},
+            {nodeType: 3, textContent: '\n3 TIME 00:01:02'},
+        ],
+        replaceWith(details) {
+            this.details = details;
+        },
+    };
+    const baptismDateContent = {
+        dataset: {},
+        childNodes: [
+            {nodeType: 3, textContent: '0 @I1@ INDI\n1 BAPM\n'},
+            {nodeType: 1, tagName: 'DEL', textContent: '2 DATE 12 SEPT 1830'},
+            {nodeType: 3, textContent: '\n'},
+            {nodeType: 1, tagName: 'INS', textContent: '2 DATE 12 SEP 1830'},
+            {nodeType: 3, textContent: '\n1 CHAN\n'},
+            {nodeType: 1, tagName: 'INS', textContent: '2 DATE 1 AUG 2026'},
+        ],
+        replaceWith(details) {
+            this.details = details;
+        },
+    };
+    const baptismSubstructureContent = {
+        dataset: {},
+        childNodes: [
+            {nodeType: 3, textContent: '0 @I1@ INDI\n'},
+            {nodeType: 1, tagName: 'INS', textContent: '1 BAPM'},
+            {nodeType: 3, textContent: '\n'},
+            {nodeType: 1, tagName: 'INS', textContent: '2 DATE 12 SEP 1830'},
+            {nodeType: 3, textContent: '\n'},
+            {nodeType: 1, tagName: 'INS', textContent: '2 PLAC Koźmin, , , POL'},
+            {nodeType: 3, textContent: '\n'},
+            {nodeType: 1, tagName: 'INS', textContent: '2 SOUR @S24@'},
+            {nodeType: 3, textContent: '\n'},
+            {nodeType: 1, tagName: 'INS', textContent: '3 PAGE https://example.test/source-page'},
+        ],
+        replaceWith(details) {
+            this.details = details;
+        },
+    };
+    const personCreatedContent = {
+        dataset: {},
+        childNodes: [
+            {nodeType: 1, tagName: 'INS', textContent: '0 @I2@ INDI'},
+            {nodeType: 3, textContent: '\n'},
+            {nodeType: 1, tagName: 'INS', textContent: '1 NAME Maria /Example/'},
+            {nodeType: 3, textContent: '\n'},
+            {nodeType: 1, tagName: 'INS', textContent: '1 BAPM'},
+            {nodeType: 3, textContent: '\n'},
+            {nodeType: 1, tagName: 'INS', textContent: '2 DATE 12 SEP 1830'},
+            {nodeType: 3, textContent: '\n'},
+            {nodeType: 1, tagName: 'INS', textContent: '1 CHAN'},
+            {nodeType: 3, textContent: '\n'},
+            {nodeType: 1, tagName: 'INS', textContent: '2 DATE 1 AUG 2026'},
+        ],
+        replaceWith(details) {
+            this.details = details;
+        },
+    };
     return {
         classList: {remove() {}},
         dataset: {
@@ -62,24 +130,48 @@ function createTable() {
             showTree: 'false',
             showUser: 'true',
             statusLabels: JSON.stringify({accepted: 'accepted', pending: 'pending', rejected: 'rejected'}),
-            summaryLabels: JSON.stringify({'BIRT:DATE': 'Birth date', 'BIRT:PLAC': 'Birth place', NAME: 'Name', SEX: 'Sex'}),
+            summaryLabels: JSON.stringify({
+                BAPM: 'Baptism event',
+                'BAPM:DATE': 'Baptism date',
+                'BAPM:PLAC': 'Baptism place',
+                'BIRT:DATE': 'Birth date',
+                'BIRT:PLAC': 'Birth place',
+                NAME: 'Name',
+                SEX: 'Sex',
+            }),
             summaryText: JSON.stringify({
                 added: '{fact} added',
+                addedSubstructure: '{fact} with substructure added',
                 changed: '{fact} changed',
                 empty: 'Empty value',
                 new: 'New value',
                 old: 'Previous value',
                 removed: '{fact} removed',
+                removedSubstructure: '{fact} with substructure removed',
+                personCreated: 'Person created',
             }),
             xref: 'I1',
         },
         querySelectorAll() {
-            return [gedcomContent, unknownContent, complexContent, multiLineContent]
+            return [
+                gedcomContent,
+                unknownContent,
+                complexContent,
+                multiLineContent,
+                chanOnlyContent,
+                baptismDateContent,
+                baptismSubstructureContent,
+                personCreatedContent,
+            ]
                 .filter((content) => content.dataset.hhChangeLogDetails === undefined);
         },
+        baptismDateContent,
+        baptismSubstructureContent,
+        chanOnlyContent,
         complexContent,
         gedcomContent,
         multiLineContent,
+        personCreatedContent,
         unknownContent,
     };
 }
@@ -187,7 +279,7 @@ function run(version) {
     vm.runInNewContext(source, {document, URL, window});
 
     assert.ok(options, `DataTables ${version} was not initialized`);
-    assert.equal(options.ajax.type, 'POST');
+    assert.equal(options.ajax.type, version === 2 ? 'POST' : 'GET');
     assert.equal(new URL(options.ajax.url).searchParams.get('xref'), 'I1');
     assert.equal(new URL(options.ajax.url).searchParams.get('from'), '2026-01-01');
 
@@ -245,10 +337,27 @@ function run(version) {
     assert.equal(table.gedcomContent.dataset.hhChangeLogDetails, '');
     assert.equal(table.unknownContent.details.beforeElements, undefined);
     assert.equal(table.unknownContent.details.children[1], table.unknownContent);
+    assert.equal(table.chanOnlyContent.details.beforeElements, undefined);
+    assert.equal(table.chanOnlyContent.details.children[1], table.chanOnlyContent);
     assert.equal(table.complexContent.details.beforeElements.length, 2);
     assert.equal(table.complexContent.details.beforeElements[0].children[0].textContent, 'Name added');
     assert.equal(table.complexContent.details.beforeElements[1].children[0].textContent, 'Sex added');
     assert.equal(table.complexContent.details.children[1], table.complexContent);
+
+    const baptismDateSummary = table.baptismDateContent.details.beforeElements[0];
+    assert.equal(baptismDateSummary.children[0].textContent, 'Baptism date changed');
+    assert.equal(baptismDateSummary.children[1].textContent, '12 SEPT 1830');
+    assert.equal(baptismDateSummary.children[3].textContent, '12 SEP 1830');
+
+    const baptismSubstructureSummary = table.baptismSubstructureContent.details.beforeElements[0];
+    assert.equal(table.baptismSubstructureContent.details.beforeElements.length, 1);
+    assert.equal(baptismSubstructureSummary.children.length, 1);
+    assert.equal(baptismSubstructureSummary.children[0].textContent, 'Baptism event with substructure added');
+
+    const personCreatedSummary = table.personCreatedContent.details.beforeElements[0];
+    assert.equal(table.personCreatedContent.details.beforeElements.length, 1);
+    assert.equal(personCreatedSummary.children.length, 1);
+    assert.equal(personCreatedSummary.children[0].textContent, 'Person created');
 
     const multiLineSummaries = table.multiLineContent.details.beforeElements;
     assert.equal(multiLineSummaries.length, 2);

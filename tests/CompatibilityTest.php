@@ -30,6 +30,9 @@ $translations = $module->customTranslations('de');
 
 if (($translations['A tab showing recent GEDCOM data changes for an individual.'] ?? '') === ''
     || ($translations['Birth place'] ?? '') !== 'Geburtsort'
+    || ($translations['Baptism event'] ?? '') !== 'Taufereignis'
+    || ($translations['{fact} with substructure added'] ?? '') !== '{fact} mit Unterstruktur hinzugefügt'
+    || ($translations['Person created'] ?? '') !== 'Person neu angelegt'
     || ($translations['{fact} changed'] ?? '') !== '{fact} geändert'
 ) {
     throw new RuntimeException('The German gettext catalog could not be loaded.');
@@ -54,8 +57,9 @@ if (!$has_webtrees_23_loader && !$has_webtrees_22_loader) {
 
 $script = file_get_contents(__DIR__ . '/../resources/js/hh-change-log.js');
 $tab_view = file_get_contents(__DIR__ . '/../resources/views/tab.phtml');
+$module_source = file_get_contents(__DIR__ . '/../ChangeLogTabModule.php');
 
-if (!is_string($script) || !is_string($tab_view)) {
+if (!is_string($script) || !is_string($tab_view) || !is_string($module_source)) {
     throw new RuntimeException('The DataTables compatibility bridge could not be loaded.');
 }
 
@@ -63,7 +67,7 @@ $script = str_replace("\r\n", "\n", $script);
 
 if (str_contains($script, '$(document)')
     || str_contains($script, 'row.cells[2]')
-    || !str_contains($script, "type: 'POST'")
+    || !str_contains($script, "type: supportsDataTables2 ? 'POST' : 'GET'")
     || !str_contains($script, 'data.xref = table.dataset.xref')
     || !str_contains($script, 'return data;')
     || !str_contains($script, 'render: renderStatus, targets: 2')
@@ -74,9 +78,15 @@ if (str_contains($script, '$(document)')
     || !str_contains($script, 'dataTable.ajax.url(ajaxUrl()).load()')
     || !str_contains($script, 'const createSummaries = (content) =>')
     || !str_contains($script, "data.order = [{column: 0, dir: 'desc'}]")
+    || !str_contains($script, "line.level === 1 && line.tag === 'CHAN'")
+    || !str_contains($script, 'const createSubstructureSummary = (line) =>')
+    || !str_contains($script, 'recordLines.every((line) => line.change === \'new\')')
     || !str_contains($script, 'stateSave: false')
     || !str_contains($script, 'hh-change-log-status--')
-    || !str_contains($tab_view, "['tree' => \$tree->name(), 'xref' => \$xref]")
+    || !str_contains($tab_view, "['module' => \$module_name, 'action' => 'Data', 'tree' => \$tree->name(), 'xref' => \$xref]")
+    || !str_contains($module_source, "\$order = [['column' => 0, 'dir' => 'desc']]")
+    || !str_contains($module_source, '->withQueryParams($query)')
+    || !str_contains($module_source, '->withParsedBody($body)')
 ) {
     throw new RuntimeException('The DataTables compatibility bridge is incomplete.');
 }
