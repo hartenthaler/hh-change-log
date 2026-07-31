@@ -21,11 +21,54 @@ use Hartenthaler\Webtrees\ChangeLog\Internationalization\MoreI18N;
 ?>
 
 <div class="col of-tab-changes pb-4">
+	<form class="hh-change-log-filters card card-body mb-3">
+		<div class="row g-3">
+			<div class="col-sm-6 col-lg-3">
+				<label class="form-label" for="hh-change-log-from"><?= I18N::translate('From date') ?></label>
+				<input class="form-control" id="hh-change-log-from" name="from" type="date" value="<?= e($from) ?>">
+			</div>
+			<div class="col-sm-6 col-lg-3">
+				<label class="form-label" for="hh-change-log-to"><?= I18N::translate('To date') ?></label>
+				<input class="form-control" id="hh-change-log-to" name="to" type="date">
+			</div>
+			<div class="col-sm-6 col-lg-3">
+				<label class="form-label" for="hh-change-log-status"><?= MoreI18N::xlate('Status') ?></label>
+				<?= view('components/select', [
+					'id' => 'hh-change-log-status',
+					'name' => 'type',
+					'selected' => '',
+					'options' => [
+						'' => MoreI18N::xlate('All'),
+						'accepted' => MoreI18N::xlate('accepted'),
+						'pending' => MoreI18N::xlate('pending'),
+						'rejected' => MoreI18N::xlate('rejected'),
+					],
+				]) ?>
+			</div>
+			<div class="col-sm-6 col-lg-3">
+				<label class="form-label" for="hh-change-log-user"><?= MoreI18N::xlate('User') ?></label>
+				<input class="form-control" id="hh-change-log-user" name="username" type="search">
+			</div>
+			<div class="col-sm-6 col-lg-4">
+				<label class="form-label" for="hh-change-log-old-data"><?= I18N::translate('Old GEDCOM data') ?></label>
+				<input class="form-control" id="hh-change-log-old-data" name="oldged" placeholder="<?= e(I18N::translate('GEDCOM tag or text')) ?>" type="search">
+			</div>
+			<div class="col-sm-6 col-lg-4">
+				<label class="form-label" for="hh-change-log-new-data"><?= I18N::translate('New GEDCOM data') ?></label>
+				<input class="form-control" id="hh-change-log-new-data" name="newged" placeholder="<?= e(I18N::translate('GEDCOM tag or text')) ?>" type="search">
+			</div>
+			<div class="col-lg-4 d-flex align-items-end gap-2">
+				<button class="btn btn-primary" type="submit"><?= I18N::translate('Apply filters') ?></button>
+				<button class="btn btn-secondary hh-change-log-reset" type="button"><?= I18N::translate('Reset filters') ?></button>
+			</div>
+		</div>
+	</form>
+
 	<div class="table-responsive shadow">
 		<table
 			class="of-changes table table-bordered table-sm d-none"
 			<?= view('lists/datatables-attributes') ?>
-			data-ajax="<?= route(PendingChangesLogData::class, ['from' => $from, 'xref' => $xref, 'tree' => $tree->name()]) ?>"
+			data-ajax="<?= route(PendingChangesLogData::class, ['tree' => $tree->name()]) ?>"
 			data-gedcom-details-label="<?= e(I18N::translate('GEDCOM details')) ?>"
 			data-gedcom-expanded="<?= $gedcom_expanded ? 'true' : 'false' ?>"
 			data-status-labels="<?= e(json_encode([
@@ -33,7 +76,6 @@ use Hartenthaler\Webtrees\ChangeLog\Internationalization\MoreI18N;
 				'pending' => I18N::translate('pending'),
 				'rejected' => I18N::translate('rejected'),
 			], JSON_THROW_ON_ERROR)) ?>"
-			data-from="<?= e($from) ?>"
 			data-xref="<?= e($xref) ?>"
 			data-searching="false"
 			data-server-side="true"

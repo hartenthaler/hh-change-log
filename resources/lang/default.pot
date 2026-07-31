@@ -90,3 +90,31 @@ msgstr ""
 #: resources/views/settings.phtml
 msgid "Reset to defaults"
 msgstr ""
+
+#: resources/views/tab.phtml
+msgid "From date"
+msgstr ""
+
+#: resources/views/tab.phtml
+msgid "To date"
+msgstr ""
+
+#: resources/views/tab.phtml
+msgid "Old GEDCOM data"
+msgstr ""
+
+#: resources/views/tab.phtml
+msgid "New GEDCOM data"
+msgstr ""
+
+#: resources/views/tab.phtml
+msgid "GEDCOM tag or text"
+msgstr ""
+
+#: resources/views/tab.phtml
+msgid "Apply filters"
+msgstr ""
+
+#: resources/views/tab.phtml
+msgid "Reset filters"
+msgstr ""

@@ -5,6 +5,27 @@
         return;
     }
 
+    const filters = document.querySelector('.hh-change-log-filters');
+    const filterNames = ['from', 'to', 'type', 'username', 'oldged', 'newged'];
+    const filterValue = (name) => filters?.elements.namedItem(name)?.value.trim() ?? '';
+    const ajaxUrl = () => {
+        const url = new URL(table.dataset.ajax, document.baseURI);
+
+        url.searchParams.set('xref', table.dataset.xref);
+
+        filterNames.forEach((name) => {
+            const value = filterValue(name);
+
+            if (value === '') {
+                url.searchParams.delete(name);
+            } else {
+                url.searchParams.set(name, value);
+            }
+        });
+
+        return url.toString();
+    };
+
     const initialize = () => {
         if (table.dataset.hhChangeLogInitialized !== undefined) {
             return true;
@@ -23,16 +44,19 @@
 
         const maximum = Number(table.dataset.maximumNumber);
         const statusLabels = JSON.parse(table.dataset.statusLabels ?? '{}');
+        let dataTable;
         let requestStart = 0;
 
         const options = {
             ajax: {
-                url: table.dataset.ajax,
+                url: ajaxUrl(),
                 type: 'POST',
                 data: (data) => {
                     requestStart = Number(data.start ?? 0);
-                    data.from = table.dataset.from;
                     data.xref = table.dataset.xref;
+                    filterNames.forEach((name) => {
+                        data[name] = filterValue(name);
+                    });
 
                     if (maximum > 0) {
                         const remaining = Math.max(0, maximum - requestStart);
@@ -86,10 +110,22 @@
         };
 
         if (supportsDataTables2) {
-            new window.DataTable(table, options);
+            dataTable = new window.DataTable(table, options);
         } else {
-            window.jQuery(table).DataTable(options);
+            dataTable = window.jQuery(table).DataTable(options);
         }
+
+        filters?.addEventListener('submit', (event) => {
+            event.preventDefault();
+            dataTable.ajax.url(ajaxUrl()).load();
+        });
+
+        filters?.querySelector('.hh-change-log-reset')?.addEventListener('click', () => {
+            filterNames.forEach((name) => {
+                filters.elements.namedItem(name).value = '';
+            });
+            dataTable.ajax.url(ajaxUrl()).load();
+        });
 
         table.classList.remove('d-none');
 

@@ -61,6 +61,7 @@ The module supports
 * highlighted GEDCOM differences for inserted and deleted data
 * expandable and collapsible GEDCOM details
 * optional limits for the date range and number of entries
+* combinable server-side filters for dates, status, user, and old or new GEDCOM data
 * configurable visibility of the user, record, and family-tree columns
 * reuse of webtrees' existing translated change-log labels
 
@@ -76,6 +77,8 @@ Administrators can configure the module from its settings page in the control pa
 * record column shown or hidden (hidden by default)
 * family-tree column shown or hidden (hidden by default)
 * a **Reset to defaults** button for restoring all display settings
+
+Managers can filter the table without loading the complete change history into the browser. Separate fields for old and new GEDCOM data support searches for tags or text in either version of a changed record. The reset action clears all filters.
 
 Managers can expand or collapse the GEDCOM details for each entry directly in the **Changes** tab.
 Existing saved settings remain unchanged until an administrator saves new values or resets them to the defaults.
