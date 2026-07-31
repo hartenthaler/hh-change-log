@@ -10,6 +10,8 @@
 - Replaced the status text with color-coded indicators and translated tooltips.
 - Added module-specific column visibility labels so translations no longer depend on ambiguous webtrees core wording.
 - Added an administrator action to reset all display settings to their defaults.
+- Added combinable server-side filters for date range, status, user, and old or new GEDCOM data.
+- Added a filter reset action that reloads the unfiltered change history for the individual.
 
 ## 2.2.6.4
 

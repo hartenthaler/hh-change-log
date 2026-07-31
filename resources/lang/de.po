@@ -91,3 +91,31 @@ msgstr "Spalte einblenden"
 #: resources/views/settings.phtml
 msgid "Reset to defaults"
 msgstr "Auf Standard zurücksetzen"
+
+#: resources/views/tab.phtml
+msgid "From date"
+msgstr "Von-Datum"
+
+#: resources/views/tab.phtml
+msgid "To date"
+msgstr "Bis-Datum"
+
+#: resources/views/tab.phtml
+msgid "Old GEDCOM data"
+msgstr "Alte GEDCOM-Daten"
+
+#: resources/views/tab.phtml
+msgid "New GEDCOM data"
+msgstr "Neue GEDCOM-Daten"
+
+#: resources/views/tab.phtml
+msgid "GEDCOM tag or text"
+msgstr "GEDCOM-Tag oder Text"
+
+#: resources/views/tab.phtml
+msgid "Apply filters"
+msgstr "Filter anwenden"
+
+#: resources/views/tab.phtml
+msgid "Reset filters"
+msgstr "Filter zurücksetzen"

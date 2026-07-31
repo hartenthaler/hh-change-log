@@ -36,8 +36,10 @@ $dutch_translations = $module->customTranslations('nl');
 
 if (($dutch_translations['Show column'] ?? '') !== 'Kolom weergeven'
     || ($dutch_translations['Hide column'] ?? '') !== 'Kolom verbergen'
+    || ($dutch_translations['Apply filters'] ?? '') !== 'Filters toepassen'
+    || ($dutch_translations['Reset filters'] ?? '') !== 'Filters wissen'
 ) {
-    throw new RuntimeException('The module-specific Dutch column labels could not be loaded.');
+    throw new RuntimeException('The module-specific Dutch labels could not be loaded.');
 }
 
 $has_webtrees_23_loader = class_exists(\Fisharebest\Webtrees\I18N\Translation::class);
@@ -52,8 +54,9 @@ $script = file_get_contents(__DIR__ . '/../resources/js/hh-change-log.js');
 if (!is_string($script)
     || str_contains($script, '$(document)')
     || !str_contains($script, "type: 'POST'")
-    || !str_contains($script, 'data.from = table.dataset.from')
     || !str_contains($script, 'data.xref = table.dataset.xref')
+    || !str_contains($script, "const filterNames = ['from', 'to', 'type', 'username', 'oldged', 'newged']")
+    || !str_contains($script, 'dataTable.ajax.url(ajaxUrl()).load()')
     || !str_contains($script, 'hh-change-log-status--')
 ) {
     throw new RuntimeException('The DataTables compatibility bridge is incomplete.');

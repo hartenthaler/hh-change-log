@@ -17,7 +17,6 @@ function createTable() {
         classList: {remove() {}},
         dataset: {
             ajax: '/changes',
-            from: '2026-01-01',
             gedcomDetailsLabel: 'GEDCOM details',
             gedcomExpanded: 'false',
             maximumNumber: '15',
@@ -31,13 +30,62 @@ function createTable() {
     };
 }
 
+function createFilters() {
+    const fields = Object.fromEntries(
+        ['from', 'to', 'type', 'username', 'oldged', 'newged'].map((name) => [name, {value: ''}]),
+    );
+    const handlers = {};
+    const resetHandlers = {};
+
+    fields.from.value = '2026-01-01';
+
+    return {
+        addEventListener(type, handler) {
+            handlers[type] = handler;
+        },
+        elements: {
+            namedItem(name) {
+                return fields[name];
+            },
+        },
+        fields,
+        handlers,
+        querySelector(selector) {
+            assert.equal(selector, '.hh-change-log-reset');
+
+            return {
+                addEventListener(type, handler) {
+                    resetHandlers[type] = handler;
+                },
+            };
+        },
+        resetHandlers,
+    };
+}
+
 function run(version) {
     const table = createTable();
+    const filters = createFilters();
+    const loadedUrls = [];
     let options;
+
+    const dataTable = {
+        ajax: {
+            url(url) {
+                return {
+                    load() {
+                        loadedUrls.push(url);
+                    },
+                };
+            },
+        },
+    };
 
     const DataTable = function (element, suppliedOptions) {
         assert.equal(element, table);
         options = suppliedOptions;
+
+        return dataTable;
     };
     DataTable.versionCheck = () => version === 2;
 
@@ -47,6 +95,8 @@ function run(version) {
         return {
             DataTable(suppliedOptions) {
                 options = suppliedOptions;
+
+                return dataTable;
             },
         };
     };
@@ -58,6 +108,7 @@ function run(version) {
         jQuery: version === 1 ? jQuery : undefined,
     };
     const document = {
+        baseURI: 'https://example.test/individual/I1',
         createElement() {
             return {
                 setAttribute(name, value) {
@@ -65,19 +116,26 @@ function run(version) {
                 },
             };
         },
-        querySelector() {
-            return table;
+        querySelector(selector) {
+            return selector === '.of-changes' ? table : filters;
         },
     };
 
-    vm.runInNewContext(source, {document, window});
+    vm.runInNewContext(source, {document, URL, window});
 
     assert.ok(options, `DataTables ${version} was not initialized`);
     assert.equal(options.ajax.type, 'POST');
+    assert.equal(new URL(options.ajax.url).searchParams.get('xref'), 'I1');
+    assert.equal(new URL(options.ajax.url).searchParams.get('from'), '2026-01-01');
 
     const request = {length: 25, start: 10};
     options.ajax.data(request);
     assert.equal(request.from, '2026-01-01');
+    assert.equal(request.to, '');
+    assert.equal(request.type, '');
+    assert.equal(request.username, '');
+    assert.equal(request.oldged, '');
+    assert.equal(request.newged, '');
     assert.equal(request.xref, 'I1');
     assert.equal(request.length, 5);
 
@@ -91,6 +149,33 @@ function run(version) {
     assert.equal(table.statusCell.indicator.title, 'pending');
     assert.equal(table.statusCell.indicator['aria-label'], 'pending');
     assert.equal(table.statusCell.indicator.role, 'img');
+
+    filters.fields.to.value = '2026-02-01';
+    filters.fields.type.value = 'pending';
+    filters.fields.username.value = 'manager';
+    filters.fields.oldged.value = '1 NAME';
+    filters.fields.newged.value = '1 BIRT';
+    filters.handlers.submit({preventDefault() {}});
+
+    const filteredUrl = new URL(loadedUrls.at(-1));
+    assert.equal(filteredUrl.searchParams.get('from'), '2026-01-01');
+    assert.equal(filteredUrl.searchParams.get('to'), '2026-02-01');
+    assert.equal(filteredUrl.searchParams.get('type'), 'pending');
+    assert.equal(filteredUrl.searchParams.get('username'), 'manager');
+    assert.equal(filteredUrl.searchParams.get('oldged'), '1 NAME');
+    assert.equal(filteredUrl.searchParams.get('newged'), '1 BIRT');
+    assert.equal(filteredUrl.searchParams.get('xref'), 'I1');
+
+    filters.resetHandlers.click();
+
+    const resetUrl = new URL(loadedUrls.at(-1));
+    assert.equal(resetUrl.searchParams.get('xref'), 'I1');
+    assert.equal(resetUrl.searchParams.has('from'), false);
+    assert.equal(resetUrl.searchParams.has('to'), false);
+    assert.equal(resetUrl.searchParams.has('type'), false);
+    assert.equal(resetUrl.searchParams.has('username'), false);
+    assert.equal(resetUrl.searchParams.has('oldged'), false);
+    assert.equal(resetUrl.searchParams.has('newged'), false);
 }
 
 run(1);

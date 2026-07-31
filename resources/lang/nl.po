@@ -91,3 +91,31 @@ msgstr "Kolom weergeven"
 #: resources/views/settings.phtml
 msgid "Reset to defaults"
 msgstr "Standaardinstellingen herstellen"
+
+#: resources/views/tab.phtml
+msgid "From date"
+msgstr "Begindatum"
+
+#: resources/views/tab.phtml
+msgid "To date"
+msgstr "Einddatum"
+
+#: resources/views/tab.phtml
+msgid "Old GEDCOM data"
+msgstr "Oude GEDCOM-gegevens"
+
+#: resources/views/tab.phtml
+msgid "New GEDCOM data"
+msgstr "Nieuwe GEDCOM-gegevens"
+
+#: resources/views/tab.phtml
+msgid "GEDCOM tag or text"
+msgstr "GEDCOM-tag of tekst"
+
+#: resources/views/tab.phtml
+msgid "Apply filters"
+msgstr "Filters toepassen"
+
+#: resources/views/tab.phtml
+msgid "Reset filters"
+msgstr "Filters wissen"
