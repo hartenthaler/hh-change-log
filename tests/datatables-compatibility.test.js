@@ -6,6 +6,7 @@ const source = fs.readFileSync('resources/js/hh-change-log.js', 'utf8');
 
 function createTable() {
     const gedcomContent = {
+        dataset: {},
         childNodes: [
             {nodeType: 3, textContent: '0 @I1@ INDI\n1 BIRT\n'},
             {nodeType: 1, tagName: 'DEL', textContent: '2 PLAC Berlin'},
@@ -17,16 +18,34 @@ function createTable() {
         },
     };
     const unknownContent = {
+        dataset: {},
         childNodes: [{nodeType: 1, tagName: 'INS', textContent: '1 _CUSTOM value'}],
         replaceWith(details) {
             this.details = details;
         },
     };
     const complexContent = {
+        dataset: {},
         childNodes: [
             {nodeType: 1, tagName: 'INS', textContent: '1 NAME Alice /Example/'},
             {nodeType: 3, textContent: '\n'},
             {nodeType: 1, tagName: 'INS', textContent: '1 SEX F'},
+        ],
+        replaceWith(details) {
+            this.details = details;
+        },
+    };
+    const multiLineContent = {
+        dataset: {},
+        childNodes: [
+            {nodeType: 3, textContent: '0 @I1@ INDI\n1 BIRT\n'},
+            {nodeType: 1, tagName: 'DEL', textContent: '2 DATE 1900'},
+            {nodeType: 3, textContent: '\n'},
+            {nodeType: 1, tagName: 'DEL', textContent: '2 PLAC Berlin'},
+            {nodeType: 3, textContent: '\n'},
+            {nodeType: 1, tagName: 'INS', textContent: '2 DATE 1901'},
+            {nodeType: 3, textContent: '\n'},
+            {nodeType: 1, tagName: 'INS', textContent: '2 PLAC Hamburg'},
         ],
         replaceWith(details) {
             this.details = details;
@@ -43,7 +62,7 @@ function createTable() {
             showTree: 'false',
             showUser: 'true',
             statusLabels: JSON.stringify({accepted: 'accepted', pending: 'pending', rejected: 'rejected'}),
-            summaryLabels: JSON.stringify({'BIRT:PLAC': 'Birth place', NAME: 'Name', SEX: 'Sex'}),
+            summaryLabels: JSON.stringify({'BIRT:DATE': 'Birth date', 'BIRT:PLAC': 'Birth place', NAME: 'Name', SEX: 'Sex'}),
             summaryText: JSON.stringify({
                 added: '{fact} added',
                 changed: '{fact} changed',
@@ -55,10 +74,12 @@ function createTable() {
             xref: 'I1',
         },
         querySelectorAll() {
-            return [gedcomContent, unknownContent, complexContent];
+            return [gedcomContent, unknownContent, complexContent, multiLineContent]
+                .filter((content) => content.dataset.hhChangeLogDetails === undefined);
         },
         complexContent,
         gedcomContent,
+        multiLineContent,
         unknownContent,
     };
 }
@@ -149,8 +170,8 @@ function run(version) {
                 append(...children) {
                     this.children.push(...children);
                 },
-                before(element) {
-                    this.beforeElement = element;
+                before(...elements) {
+                    this.beforeElements = elements;
                 },
                 setAttribute(name, value) {
                     this[name] = value;
@@ -181,6 +202,7 @@ function run(version) {
     assert.equal(request.newged, '');
     assert.equal(request.xref, 'I1');
     assert.equal(request.length, 5);
+    assert.deepEqual(Array.from(request.order, (order) => ({...order})), [{column: 0, dir: 'desc'}]);
 
     const response = {data: [1, 2, 3, 4, 5, 6], recordsFiltered: 50, recordsTotal: 60};
     assert.deepEqual(Array.from(options.ajax.dataSrc(response)), [1, 2, 3, 4, 5]);
@@ -189,6 +211,7 @@ function run(version) {
 
     assert.deepEqual(Array.from(options.columns, (column) => column.data), [0, 1, 2, 3, 5, 6, 4]);
     assert.deepEqual(Array.from(options.order[0]), [0, 'desc']);
+    assert.equal(options.stateSave, false);
 
     const columnDefinition = (target) => options.columnDefs.find((definition) => definition.targets === target);
     assert.equal(columnDefinition(0).visible, false);
@@ -210,7 +233,7 @@ function run(version) {
 
     options.drawCallback();
 
-    const humanSummary = table.gedcomContent.details.beforeElement;
+    const humanSummary = table.gedcomContent.details.beforeElements[0];
     assert.equal(humanSummary.className, 'hh-change-log-summary');
     assert.equal(humanSummary.children[0].textContent, 'Birth place changed');
     assert.equal(humanSummary.children[1].textContent, 'Berlin');
@@ -219,10 +242,25 @@ function run(version) {
     assert.equal(humanSummary.children[3].textContent, 'Hamburg');
     assert.equal(humanSummary.children[3].title, 'New value');
     assert.equal(table.gedcomContent.details.children[1], table.gedcomContent);
-    assert.equal(table.unknownContent.details.beforeElement, undefined);
+    assert.equal(table.gedcomContent.dataset.hhChangeLogDetails, '');
+    assert.equal(table.unknownContent.details.beforeElements, undefined);
     assert.equal(table.unknownContent.details.children[1], table.unknownContent);
-    assert.equal(table.complexContent.details.beforeElement, undefined);
+    assert.equal(table.complexContent.details.beforeElements.length, 2);
+    assert.equal(table.complexContent.details.beforeElements[0].children[0].textContent, 'Name added');
+    assert.equal(table.complexContent.details.beforeElements[1].children[0].textContent, 'Sex added');
     assert.equal(table.complexContent.details.children[1], table.complexContent);
+
+    const multiLineSummaries = table.multiLineContent.details.beforeElements;
+    assert.equal(multiLineSummaries.length, 2);
+    assert.equal(multiLineSummaries[0].children[0].textContent, 'Birth date changed');
+    assert.equal(multiLineSummaries[0].children[1].textContent, '1900');
+    assert.equal(multiLineSummaries[0].children[3].textContent, '1901');
+    assert.equal(multiLineSummaries[1].children[0].textContent, 'Birth place changed');
+    assert.equal(multiLineSummaries[1].children[1].textContent, 'Berlin');
+    assert.equal(multiLineSummaries[1].children[3].textContent, 'Hamburg');
+
+    options.drawCallback();
+    assert.equal(table.gedcomContent.details.beforeElements.length, 1);
 
     filters.fields.to.value = '2026-02-01';
     filters.fields.type.value = 'pending';

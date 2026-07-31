@@ -2,6 +2,10 @@
 
 ## Next release
 
+- Fixed the change history to always show the newest entries first, independently of saved DataTables state.
+- Extended human-readable summaries to cover multiple unambiguous changes within one GEDCOM diff.
+- Prevented GEDCOM details from being wrapped repeatedly when a table is redrawn.
+
 - Updated Dutch translations; thanks to @TheDutchJewel.
 - Added compatibility with webtrees 2.3 while retaining webtrees 2.2.6 support.
 - Replaced jQuery-dependent table event handling with a DataTables 1/2 compatibility bridge.
