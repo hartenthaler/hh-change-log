@@ -18,6 +18,7 @@
 - Fixed status indicators being rendered in the wrong visible column when other columns were hidden.
 - Applied the configured column visibility explicitly: GEDCOM data is always visible, the user is shown by default, and record/tree columns are hidden by default.
 - Moved the module history from the README introduction into a revised Credits section.
+- Moved GEDCOM data to the rightmost column, disabled interactive sorting for every column, and retained the fixed newest-first order.
 
 ## 2.2.6.4
 
