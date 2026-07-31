@@ -118,3 +118,83 @@ msgstr ""
 #: resources/views/tab.phtml
 msgid "Reset filters"
 msgstr ""
+
+#: resources/views/tab.phtml
+msgid "Name"
+msgstr ""
+
+#: resources/views/tab.phtml
+msgid "Sex"
+msgstr ""
+
+#: resources/views/tab.phtml
+msgid "Birth"
+msgstr ""
+
+#: resources/views/tab.phtml
+msgid "Birth date"
+msgstr ""
+
+#: resources/views/tab.phtml
+msgid "Birth place"
+msgstr ""
+
+#: resources/views/tab.phtml
+msgid "Death"
+msgstr ""
+
+#: resources/views/tab.phtml
+msgid "Death date"
+msgstr ""
+
+#: resources/views/tab.phtml
+msgid "Death place"
+msgstr ""
+
+#: resources/views/tab.phtml
+msgid "Occupation"
+msgstr ""
+
+#: resources/views/tab.phtml
+msgid "Residence"
+msgstr ""
+
+#: resources/views/tab.phtml
+msgid "Marriage"
+msgstr ""
+
+#: resources/views/tab.phtml
+msgid "Marriage date"
+msgstr ""
+
+#: resources/views/tab.phtml
+msgid "Marriage place"
+msgstr ""
+
+#: resources/views/tab.phtml
+msgid "Divorce"
+msgstr ""
+
+#: resources/views/tab.phtml
+msgid "{fact} changed"
+msgstr ""
+
+#: resources/views/tab.phtml
+msgid "{fact} added"
+msgstr ""
+
+#: resources/views/tab.phtml
+msgid "{fact} removed"
+msgstr ""
+
+#: resources/views/tab.phtml
+msgid "Previous value"
+msgstr ""
+
+#: resources/views/tab.phtml
+msgid "New value"
+msgstr ""
+
+#: resources/views/tab.phtml
+msgid "Empty value"
+msgstr ""

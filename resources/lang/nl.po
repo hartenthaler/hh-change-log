@@ -119,3 +119,83 @@ msgstr "Filters toepassen"
 #: resources/views/tab.phtml
 msgid "Reset filters"
 msgstr "Filters wissen"
+
+#: resources/views/tab.phtml
+msgid "Name"
+msgstr "Naam"
+
+#: resources/views/tab.phtml
+msgid "Sex"
+msgstr "Geslacht"
+
+#: resources/views/tab.phtml
+msgid "Birth"
+msgstr "Geboorte"
+
+#: resources/views/tab.phtml
+msgid "Birth date"
+msgstr "Geboortedatum"
+
+#: resources/views/tab.phtml
+msgid "Birth place"
+msgstr "Geboorteplaats"
+
+#: resources/views/tab.phtml
+msgid "Death"
+msgstr "Overlijden"
+
+#: resources/views/tab.phtml
+msgid "Death date"
+msgstr "Overlijdensdatum"
+
+#: resources/views/tab.phtml
+msgid "Death place"
+msgstr "Plaats van overlijden"
+
+#: resources/views/tab.phtml
+msgid "Occupation"
+msgstr "Beroep"
+
+#: resources/views/tab.phtml
+msgid "Residence"
+msgstr "Woonplaats"
+
+#: resources/views/tab.phtml
+msgid "Marriage"
+msgstr "Huwelijk"
+
+#: resources/views/tab.phtml
+msgid "Marriage date"
+msgstr "Huwelijksdatum"
+
+#: resources/views/tab.phtml
+msgid "Marriage place"
+msgstr "Huwelijksplaats"
+
+#: resources/views/tab.phtml
+msgid "Divorce"
+msgstr "Echtscheiding"
+
+#: resources/views/tab.phtml
+msgid "{fact} changed"
+msgstr "{fact} gewijzigd"
+
+#: resources/views/tab.phtml
+msgid "{fact} added"
+msgstr "{fact} toegevoegd"
+
+#: resources/views/tab.phtml
+msgid "{fact} removed"
+msgstr "{fact} verwijderd"
+
+#: resources/views/tab.phtml
+msgid "Previous value"
+msgstr "Vorige waarde"
+
+#: resources/views/tab.phtml
+msgid "New value"
+msgstr "Nieuwe waarde"
+
+#: resources/views/tab.phtml
+msgid "Empty value"
+msgstr "Lege waarde"

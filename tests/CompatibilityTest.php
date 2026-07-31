@@ -28,7 +28,10 @@ if (!$module instanceof AbstractModule
 
 $translations = $module->customTranslations('de');
 
-if (($translations['A tab showing recent GEDCOM data changes for an individual.'] ?? '') === '') {
+if (($translations['A tab showing recent GEDCOM data changes for an individual.'] ?? '') === ''
+    || ($translations['Birth place'] ?? '') !== 'Geburtsort'
+    || ($translations['{fact} changed'] ?? '') !== '{fact} geändert'
+) {
     throw new RuntimeException('The German gettext catalog could not be loaded.');
 }
 
@@ -57,6 +60,8 @@ if (!is_string($script)
     || !str_contains($script, 'data.xref = table.dataset.xref')
     || !str_contains($script, "const filterNames = ['from', 'to', 'type', 'username', 'oldged', 'newged']")
     || !str_contains($script, 'dataTable.ajax.url(ajaxUrl()).load()')
+    || !str_contains($script, 'const createSummary = (content) =>')
+    || !str_contains($script, 'changes.length > 2')
     || !str_contains($script, 'hh-change-log-status--')
 ) {
     throw new RuntimeException('The DataTables compatibility bridge is incomplete.');

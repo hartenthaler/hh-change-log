@@ -119,3 +119,83 @@ msgstr "Filter anwenden"
 #: resources/views/tab.phtml
 msgid "Reset filters"
 msgstr "Filter zurücksetzen"
+
+#: resources/views/tab.phtml
+msgid "Name"
+msgstr "Name"
+
+#: resources/views/tab.phtml
+msgid "Sex"
+msgstr "Geschlecht"
+
+#: resources/views/tab.phtml
+msgid "Birth"
+msgstr "Geburt"
+
+#: resources/views/tab.phtml
+msgid "Birth date"
+msgstr "Geburtsdatum"
+
+#: resources/views/tab.phtml
+msgid "Birth place"
+msgstr "Geburtsort"
+
+#: resources/views/tab.phtml
+msgid "Death"
+msgstr "Tod"
+
+#: resources/views/tab.phtml
+msgid "Death date"
+msgstr "Sterbedatum"
+
+#: resources/views/tab.phtml
+msgid "Death place"
+msgstr "Sterbeort"
+
+#: resources/views/tab.phtml
+msgid "Occupation"
+msgstr "Beruf"
+
+#: resources/views/tab.phtml
+msgid "Residence"
+msgstr "Wohnort"
+
+#: resources/views/tab.phtml
+msgid "Marriage"
+msgstr "Heirat"
+
+#: resources/views/tab.phtml
+msgid "Marriage date"
+msgstr "Heiratsdatum"
+
+#: resources/views/tab.phtml
+msgid "Marriage place"
+msgstr "Heiratsort"
+
+#: resources/views/tab.phtml
+msgid "Divorce"
+msgstr "Scheidung"
+
+#: resources/views/tab.phtml
+msgid "{fact} changed"
+msgstr "{fact} geändert"
+
+#: resources/views/tab.phtml
+msgid "{fact} added"
+msgstr "{fact} hinzugefügt"
+
+#: resources/views/tab.phtml
+msgid "{fact} removed"
+msgstr "{fact} entfernt"
+
+#: resources/views/tab.phtml
+msgid "Previous value"
+msgstr "Vorheriger Wert"
+
+#: resources/views/tab.phtml
+msgid "New value"
+msgstr "Neuer Wert"
+
+#: resources/views/tab.phtml
+msgid "Empty value"
+msgstr "Leerer Wert"
