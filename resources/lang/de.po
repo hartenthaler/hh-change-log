@@ -141,6 +141,18 @@ msgid "Birth place"
 msgstr "Geburtsort"
 
 #: resources/views/tab.phtml
+msgid "Baptism event"
+msgstr "Taufereignis"
+
+#: resources/views/tab.phtml
+msgid "Baptism date"
+msgstr "Taufdatum"
+
+#: resources/views/tab.phtml
+msgid "Baptism place"
+msgstr "Taufort"
+
+#: resources/views/tab.phtml
 msgid "Death"
 msgstr "Tod"
 
@@ -187,6 +199,18 @@ msgstr "{fact} hinzugefügt"
 #: resources/views/tab.phtml
 msgid "{fact} removed"
 msgstr "{fact} entfernt"
+
+#: resources/views/tab.phtml
+msgid "{fact} with substructure added"
+msgstr "{fact} mit Unterstruktur hinzugefügt"
+
+#: resources/views/tab.phtml
+msgid "{fact} with substructure removed"
+msgstr "{fact} mit Unterstruktur entfernt"
+
+#: resources/views/tab.phtml
+msgid "Person created"
+msgstr "Person neu angelegt"
 
 #: resources/views/tab.phtml
 msgid "Previous value"

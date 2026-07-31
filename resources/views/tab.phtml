@@ -1,6 +1,5 @@
 <?php
 
-use Fisharebest\Webtrees\Http\RequestHandlers\PendingChangesLogData;
 use Fisharebest\Webtrees\Individual;
 use Fisharebest\Webtrees\Tree;
 use Fisharebest\Webtrees\I18N;
@@ -9,6 +8,7 @@ use Hartenthaler\Webtrees\ChangeLog\Internationalization\MoreI18N;
 /**
  * @var Tree                 $tree
  * @var Individual           $individual
+ * @var string               $module_name
  * @var string               $xref
  * @var string               $from
  * @var int|null             $maximum_number
@@ -68,7 +68,7 @@ use Hartenthaler\Webtrees\ChangeLog\Internationalization\MoreI18N;
 		<table
 			class="of-changes table table-bordered table-sm d-none"
 			<?= view('lists/datatables-attributes') ?>
-			data-ajax="<?= route(PendingChangesLogData::class, ['tree' => $tree->name(), 'xref' => $xref]) ?>"
+			data-ajax="<?= route('module', ['module' => $module_name, 'action' => 'Data', 'tree' => $tree->name(), 'xref' => $xref]) ?>"
 			data-gedcom-details-label="<?= e(I18N::translate('GEDCOM details')) ?>"
 			data-gedcom-expanded="<?= $gedcom_expanded ? 'true' : 'false' ?>"
 			data-status-labels="<?= e(json_encode([
@@ -82,6 +82,9 @@ use Hartenthaler\Webtrees\ChangeLog\Internationalization\MoreI18N;
 				'BIRT' => I18N::translate('Birth'),
 				'BIRT:DATE' => I18N::translate('Birth date'),
 				'BIRT:PLAC' => I18N::translate('Birth place'),
+				'BAPM' => I18N::translate('Baptism event'),
+				'BAPM:DATE' => I18N::translate('Baptism date'),
+				'BAPM:PLAC' => I18N::translate('Baptism place'),
 				'DEAT' => I18N::translate('Death'),
 				'DEAT:DATE' => I18N::translate('Death date'),
 				'DEAT:PLAC' => I18N::translate('Death place'),
@@ -96,6 +99,9 @@ use Hartenthaler\Webtrees\ChangeLog\Internationalization\MoreI18N;
 				'changed' => I18N::translate('{fact} changed'),
 				'added' => I18N::translate('{fact} added'),
 				'removed' => I18N::translate('{fact} removed'),
+				'addedSubstructure' => I18N::translate('{fact} with substructure added'),
+				'removedSubstructure' => I18N::translate('{fact} with substructure removed'),
+				'personCreated' => I18N::translate('Person created'),
 				'old' => I18N::translate('Previous value'),
 				'new' => I18N::translate('New value'),
 				'empty' => I18N::translate('Empty value'),

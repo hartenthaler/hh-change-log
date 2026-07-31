@@ -79,7 +79,7 @@ Administrators can configure the module from its settings page in the control pa
 
 Managers can filter the table without loading the complete change history into the browser. Separate fields for old and new GEDCOM data support searches for tags or text in either version of a changed record. The reset action clears all filters.
 
-For simple changes to common facts, the tab shows a localized summary with visually distinct previous and new values. This includes names, sex, birth, death, occupation, residence, marriage, and divorce data. Summaries are created only for unambiguous single-line additions, removals, or replacements. Complex and unknown GEDCOM structures are not interpreted.
+For unambiguous changes to common facts, the tab shows a localized summary with visually distinct previous and new values. This includes names, sex, birth, baptism, death, occupation, residence, marriage, and divorce data. Recognized changes may comprise one or several lines. When a complete recognized event subtree is added or removed, the summary reports that an event with substructure was changed without trying to interpret every subordinate line. A completely inserted individual record is identified as a newly created person. `CHAN` metadata is ignored during this analysis. Complex and unknown GEDCOM structures are not interpreted.
 
 Managers can expand or collapse the original GEDCOM details for each entry directly in the **Changes** tab. The raw GEDCOM remains available for every summarized change without information loss.
 Existing saved settings remain unchanged until an administrator saves new values or resets them to the defaults.

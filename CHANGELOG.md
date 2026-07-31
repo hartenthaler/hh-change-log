@@ -2,8 +2,13 @@
 
 ## Next release
 
-- Fixed the change history to always show the newest entries first, independently of saved DataTables state.
+## 2.2.6.5
+
+- Fixed the change history to always show the newest entries first by enforcing descending change IDs in a module-owned server endpoint, using GET requests for webtrees 2.2 and POST requests for webtrees 2.3.
 - Extended human-readable summaries to cover multiple unambiguous changes within one GEDCOM diff.
+- Ignored `CHAN` metadata when creating human-readable change summaries.
+- Added summaries for baptism changes and for complete recognized event substructures that are added or removed.
+- Added a dedicated summary when every line of a newly created individual is marked as inserted.
 - Prevented GEDCOM details from being wrapped repeatedly when a table is redrawn.
 
 - Updated Dutch translations; thanks to @TheDutchJewel.
