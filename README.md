@@ -57,10 +57,11 @@ The module supports
 * read-only display of change-log entries for the selected individual
 * DataTables-based server-side table loading
 * timestamp, status, record, GEDCOM data, user, and tree columns
+* compact color-coded status indicators with translated tooltips
 * highlighted GEDCOM differences for inserted and deleted data
 * expandable and collapsible GEDCOM details
 * optional limits for the date range and number of entries
-* configurable visibility of the user and family-tree columns
+* configurable visibility of the user, record, and family-tree columns
 * reuse of webtrees' existing translated change-log labels
 
 <a name="Configuration"></a>
@@ -71,10 +72,13 @@ Administrators can configure the module from its settings page in the control pa
 * default date range in days (empty means unrestricted)
 * maximum number of entries (empty means unrestricted)
 * GEDCOM details expanded or collapsed by default (expanded by default)
-* user column shown or hidden (hidden by default)
+* user column shown or hidden (shown by default)
+* record column shown or hidden (hidden by default)
 * family-tree column shown or hidden (hidden by default)
+* a **Reset to defaults** button for restoring all display settings
 
 Managers can expand or collapse the GEDCOM details for each entry directly in the **Changes** tab.
+Existing saved settings remain unchanged until an administrator saves new values or resets them to the defaults.
 
 <a name="Requirements"></a>
 ## 📌 Requirements

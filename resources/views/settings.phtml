@@ -12,6 +12,7 @@ use Hartenthaler\Webtrees\ChangeLog\Internationalization\MoreI18N;
  * @var string $maximum_number
  * @var string $gedcom_details
  * @var string $show_user
+ * @var string $show_record
  * @var string $show_tree
  */
 ?>
@@ -56,7 +57,7 @@ use Hartenthaler\Webtrees\ChangeLog\Internationalization\MoreI18N;
         </div>
     </div>
 
-    <?php foreach (['show_user' => I18N::translate('User column'), 'show_tree' => I18N::translate('Family tree column')] as $name => $label) : ?>
+    <?php foreach (['show_user' => I18N::translate('User column'), 'show_record' => I18N::translate('Record column'), 'show_tree' => I18N::translate('Family tree column')] as $name => $label) : ?>
         <div class="row mb-3">
             <label class="col-sm-3 col-form-label" for="<?= e(str_replace('_', '-', $name)) ?>"><?= $label ?></label>
             <div class="col-sm-9">
@@ -64,11 +65,12 @@ use Hartenthaler\Webtrees\ChangeLog\Internationalization\MoreI18N;
                     'id' => str_replace('_', '-', $name),
                     'name' => $name,
                     'selected' => $$name,
-                    'options' => ['hide' => MoreI18N::xlate('Hide'), 'show' => MoreI18N::xlate('Show')],
+                    'options' => ['hide' => I18N::translate('Hide column'), 'show' => I18N::translate('Show column')],
                 ]) ?>
             </div>
         </div>
     <?php endforeach ?>
 
-    <button class="btn btn-primary" type="submit"><?= MoreI18N::xlate('save') ?></button>
+    <button class="btn btn-primary" name="action" type="submit" value="save"><?= MoreI18N::xlate('save') ?></button>
+    <button class="btn btn-secondary" formnovalidate name="action" type="submit" value="reset"><?= I18N::translate('Reset to defaults') ?></button>
 </form>

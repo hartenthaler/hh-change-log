@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: hh-change-log\n"
 "Report-Msgid-Bugs-To: Hermann Hartenthaler <hermann@hartenthaler.de>\n"
 "POT-Creation-Date: 2026-06-03 11:10+0200\n"
-"PO-Revision-Date: 2026-07-13 10:01+0200\n"
+"PO-Revision-Date: 2026-07-31 00:00+0200\n"
 "Last-Translator: TheDutchJewel <thedutchjewel@gmail.com>\n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -27,6 +27,10 @@ msgstr "Een tabblad dat de recente wijzigingen in de GEDCOM-gegevens van een per
 #: ChangeLogTabModule.php
 msgid "The display settings have been updated."
 msgstr "De weergave-instellingen zijn bijgewerkt."
+
+#: ChangeLogTabModule.php
+msgid "The display settings have been reset to their defaults."
+msgstr "De weergave-instellingen zijn teruggezet naar de standaardwaarden."
 
 #: resources/views/settings.phtml
 msgid "Default date range"
@@ -69,5 +73,21 @@ msgid "User column"
 msgstr "Gebruikerskolom"
 
 #: resources/views/settings.phtml
+msgid "Record column"
+msgstr "Recordkolom"
+
+#: resources/views/settings.phtml
 msgid "Family tree column"
 msgstr "Stamboomkolom"
+
+#: resources/views/settings.phtml
+msgid "Hide column"
+msgstr "Kolom verbergen"
+
+#: resources/views/settings.phtml
+msgid "Show column"
+msgstr "Kolom weergeven"
+
+#: resources/views/settings.phtml
+msgid "Reset to defaults"
+msgstr "Standaardinstellingen herstellen"

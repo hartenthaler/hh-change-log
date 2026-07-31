@@ -14,6 +14,7 @@ use Hartenthaler\Webtrees\ChangeLog\Internationalization\MoreI18N;
  * @var int|null             $maximum_number
  * @var bool                 $gedcom_expanded
  * @var bool                 $show_user
+ * @var bool                 $show_record
  * @var bool                 $show_tree
  */
 
@@ -27,6 +28,11 @@ use Hartenthaler\Webtrees\ChangeLog\Internationalization\MoreI18N;
 			data-ajax="<?= route(PendingChangesLogData::class, ['from' => $from, 'xref' => $xref, 'tree' => $tree->name()]) ?>"
 			data-gedcom-details-label="<?= e(I18N::translate('GEDCOM details')) ?>"
 			data-gedcom-expanded="<?= $gedcom_expanded ? 'true' : 'false' ?>"
+			data-status-labels="<?= e(json_encode([
+				'accepted' => I18N::translate('accepted'),
+				'pending' => I18N::translate('pending'),
+				'rejected' => I18N::translate('rejected'),
+			], JSON_THROW_ON_ERROR)) ?>"
 			data-from="<?= e($from) ?>"
 			data-xref="<?= e($xref) ?>"
 			data-searching="false"
@@ -39,7 +45,7 @@ use Hartenthaler\Webtrees\ChangeLog\Internationalization\MoreI18N;
 					<th data-visible="false"></th>
 					<th><?= MoreI18N::xlate('Timestamp') ?></th>
 					<th><?= MoreI18N::xlate('Status') ?></th>
-					<th><?= MoreI18N::xlate('Record') ?></th>
+					<th data-visible="<?= $show_record ? 'true' : 'false' ?>"><?= MoreI18N::xlate('Record') ?></th>
 					<th data-sortable="false"><?= MoreI18N::xlate('Data') ?></th>
 					<th data-visible="<?= $show_user ? 'true' : 'false' ?>"><?= MoreI18N::xlate('User') ?></th>
 					<th data-visible="<?= $show_tree ? 'true' : 'false' ?>"><?= MoreI18N::xlate('Tree') ?></th>

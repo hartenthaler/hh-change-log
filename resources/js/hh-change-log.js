@@ -22,6 +22,7 @@
         table.dataset.hhChangeLogInitialized = '';
 
         const maximum = Number(table.dataset.maximumNumber);
+        const statusLabels = JSON.parse(table.dataset.statusLabels ?? '{}');
         let requestStart = 0;
 
         const options = {
@@ -58,6 +59,25 @@
                     summary.textContent = table.dataset.gedcomDetailsLabel;
                     content.replaceWith(details);
                     details.append(summary, content);
+                });
+
+                table.querySelectorAll('tbody tr').forEach((row) => {
+                    const statusCell = row.cells[2];
+
+                    if (statusCell === undefined || statusCell.dataset.hhChangeLogStatus !== undefined) {
+                        return;
+                    }
+
+                    const label = statusCell.textContent.trim();
+                    const status = Object.keys(statusLabels).find((key) => statusLabels[key] === label) ?? 'unknown';
+                    const indicator = document.createElement('span');
+
+                    statusCell.dataset.hhChangeLogStatus = '';
+                    indicator.className = `hh-change-log-status hh-change-log-status--${status}`;
+                    indicator.setAttribute('aria-label', label);
+                    indicator.setAttribute('role', 'img');
+                    indicator.title = label;
+                    statusCell.replaceChildren(indicator);
                 });
             },
             order: [[0, 'desc']],

@@ -3,7 +3,34 @@ $primary: #ab3334;
 $secondary: #faf5e8;
 $success: #3adb76;
 $warning: #ffae00;
+$danger: #dc3545;
+$muted: #6c757d;
 //
+.hh-change-log-status {
+	display: inline-block;
+	width: 0.875rem;
+	height: 0.875rem;
+	border: 0.0625rem solid rgb(0 0 0 / 35%);
+	border-radius: 50%;
+	vertical-align: middle;
+
+	&--accepted {
+		background-color: $success;
+	}
+
+	&--pending {
+		background-color: $warning;
+	}
+
+	&--rejected {
+		background-color: $danger;
+	}
+
+	&--unknown {
+		background-color: $muted;
+	}
+}
+
 div.gedcom-data {
 	white-space: pre-wrap;
 	del,

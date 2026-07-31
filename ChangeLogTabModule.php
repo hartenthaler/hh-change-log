@@ -46,7 +46,13 @@ class ChangeLogTabModule extends AbstractModule implements ModuleTabInterface, M
     private const PREF_MAXIMUM_NUMBER = 'maximum_number';
     private const PREF_GEDCOM_DETAILS = 'gedcom_details';
     private const PREF_SHOW_USER = 'show_user';
+    private const PREF_SHOW_RECORD = 'show_record';
     private const PREF_SHOW_TREE = 'show_tree';
+
+    private const DEFAULT_GEDCOM_DETAILS = 'expand';
+    private const DEFAULT_SHOW_USER = 'show';
+    private const DEFAULT_SHOW_RECORD = 'hide';
+    private const DEFAULT_SHOW_TREE = 'hide';
 
     /**
      * How should this module be identified in the control panel, etc.?
@@ -245,9 +251,10 @@ class ChangeLogTabModule extends AbstractModule implements ModuleTabInterface, M
 				'xref'                   => $individual->xref(),
 				'from'                   => $dateRange === null ? '' : date('Y-m-d', strtotime('-' . $dateRange . ' days')),
 				'maximum_number'         => $maximumNumber,
-				'gedcom_expanded'        => $this->getPreference(self::PREF_GEDCOM_DETAILS, 'expand') !== 'collapse',
-				'show_user'              => $this->getPreference(self::PREF_SHOW_USER, 'hide') === 'show',
-				'show_tree'              => $this->getPreference(self::PREF_SHOW_TREE, 'hide') === 'show',
+				'gedcom_expanded'        => $this->getPreference(self::PREF_GEDCOM_DETAILS, self::DEFAULT_GEDCOM_DETAILS) !== 'collapse',
+				'show_user'              => $this->getPreference(self::PREF_SHOW_USER, self::DEFAULT_SHOW_USER) === 'show',
+				'show_record'            => $this->getPreference(self::PREF_SHOW_RECORD, self::DEFAULT_SHOW_RECORD) === 'show',
+				'show_tree'              => $this->getPreference(self::PREF_SHOW_TREE, self::DEFAULT_SHOW_TREE) === 'show',
 			]);
     }
 
@@ -259,9 +266,10 @@ class ChangeLogTabModule extends AbstractModule implements ModuleTabInterface, M
             'title' => $this->title(),
             'date_range' => (string) ($this->positiveIntegerPreference(self::PREF_DATE_RANGE) ?? ''),
             'maximum_number' => (string) ($this->positiveIntegerPreference(self::PREF_MAXIMUM_NUMBER) ?? ''),
-            'gedcom_details' => $this->getPreference(self::PREF_GEDCOM_DETAILS, 'expand') === 'collapse' ? 'collapse' : 'expand',
-            'show_user' => $this->getPreference(self::PREF_SHOW_USER, 'hide') === 'show' ? 'show' : 'hide',
-            'show_tree' => $this->getPreference(self::PREF_SHOW_TREE, 'hide') === 'show' ? 'show' : 'hide',
+            'gedcom_details' => $this->getPreference(self::PREF_GEDCOM_DETAILS, self::DEFAULT_GEDCOM_DETAILS) === 'collapse' ? 'collapse' : 'expand',
+            'show_user' => $this->getPreference(self::PREF_SHOW_USER, self::DEFAULT_SHOW_USER) === 'show' ? 'show' : 'hide',
+            'show_record' => $this->getPreference(self::PREF_SHOW_RECORD, self::DEFAULT_SHOW_RECORD) === 'show' ? 'show' : 'hide',
+            'show_tree' => $this->getPreference(self::PREF_SHOW_TREE, self::DEFAULT_SHOW_TREE) === 'show' ? 'show' : 'hide',
         ]);
     }
 
@@ -269,15 +277,33 @@ class ChangeLogTabModule extends AbstractModule implements ModuleTabInterface, M
     {
         $params = (array) $request->getParsedBody();
 
+        if (($params['action'] ?? '') === 'reset') {
+            $this->resetDisplaySettings();
+            FlashMessages::addMessage(I18N::translate('The display settings have been reset to their defaults.'), 'success');
+
+            return redirect($this->getConfigLink());
+        }
+
         $this->setPreference(self::PREF_DATE_RANGE, $this->validatedPositiveInteger($params['date_range'] ?? ''));
         $this->setPreference(self::PREF_MAXIMUM_NUMBER, $this->validatedPositiveInteger($params['maximum_number'] ?? ''));
-        $this->setPreference(self::PREF_GEDCOM_DETAILS, ($params['gedcom_details'] ?? '') === 'collapse' ? 'collapse' : 'expand');
+        $this->setPreference(self::PREF_GEDCOM_DETAILS, ($params['gedcom_details'] ?? '') === 'collapse' ? 'collapse' : self::DEFAULT_GEDCOM_DETAILS);
         $this->setPreference(self::PREF_SHOW_USER, ($params['show_user'] ?? '') === 'show' ? 'show' : 'hide');
+        $this->setPreference(self::PREF_SHOW_RECORD, ($params['show_record'] ?? '') === 'show' ? 'show' : 'hide');
         $this->setPreference(self::PREF_SHOW_TREE, ($params['show_tree'] ?? '') === 'show' ? 'show' : 'hide');
 
         FlashMessages::addMessage(I18N::translate('The display settings have been updated.'), 'success');
 
         return redirect($this->getConfigLink());
+    }
+
+    private function resetDisplaySettings(): void
+    {
+        $this->setPreference(self::PREF_DATE_RANGE, '');
+        $this->setPreference(self::PREF_MAXIMUM_NUMBER, '');
+        $this->setPreference(self::PREF_GEDCOM_DETAILS, self::DEFAULT_GEDCOM_DETAILS);
+        $this->setPreference(self::PREF_SHOW_USER, self::DEFAULT_SHOW_USER);
+        $this->setPreference(self::PREF_SHOW_RECORD, self::DEFAULT_SHOW_RECORD);
+        $this->setPreference(self::PREF_SHOW_TREE, self::DEFAULT_SHOW_TREE);
     }
 
     private function positiveIntegerPreference(string $preference): ?int

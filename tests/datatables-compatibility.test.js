@@ -5,6 +5,14 @@ const vm = require('node:vm');
 const source = fs.readFileSync('resources/js/hh-change-log.js', 'utf8');
 
 function createTable() {
+    const statusCell = {
+        dataset: {},
+        textContent: 'pending',
+        replaceChildren(indicator) {
+            this.indicator = indicator;
+        },
+    };
+
     return {
         classList: {remove() {}},
         dataset: {
@@ -13,11 +21,13 @@ function createTable() {
             gedcomDetailsLabel: 'GEDCOM details',
             gedcomExpanded: 'false',
             maximumNumber: '15',
+            statusLabels: JSON.stringify({accepted: 'accepted', pending: 'pending', rejected: 'rejected'}),
             xref: 'I1',
         },
-        querySelectorAll() {
-            return [];
+        querySelectorAll(selector) {
+            return selector === 'tbody tr' ? [{cells: [{}, {}, statusCell]}] : [];
         },
+        statusCell,
     };
 }
 
@@ -48,6 +58,13 @@ function run(version) {
         jQuery: version === 1 ? jQuery : undefined,
     };
     const document = {
+        createElement() {
+            return {
+                setAttribute(name, value) {
+                    this[name] = value;
+                },
+            };
+        },
         querySelector() {
             return table;
         },
@@ -68,6 +85,12 @@ function run(version) {
     assert.deepEqual(Array.from(options.ajax.dataSrc(response)), [1, 2, 3, 4, 5]);
     assert.equal(response.recordsFiltered, 15);
     assert.equal(response.recordsTotal, 15);
+
+    options.drawCallback();
+    assert.equal(table.statusCell.indicator.className, 'hh-change-log-status hh-change-log-status--pending');
+    assert.equal(table.statusCell.indicator.title, 'pending');
+    assert.equal(table.statusCell.indicator['aria-label'], 'pending');
+    assert.equal(table.statusCell.indicator.role, 'img');
 }
 
 run(1);

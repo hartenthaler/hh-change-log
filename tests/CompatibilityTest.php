@@ -32,6 +32,14 @@ if (($translations['A tab showing recent GEDCOM data changes for an individual.'
     throw new RuntimeException('The German gettext catalog could not be loaded.');
 }
 
+$dutch_translations = $module->customTranslations('nl');
+
+if (($dutch_translations['Show column'] ?? '') !== 'Kolom weergeven'
+    || ($dutch_translations['Hide column'] ?? '') !== 'Kolom verbergen'
+) {
+    throw new RuntimeException('The module-specific Dutch column labels could not be loaded.');
+}
+
 $has_webtrees_23_loader = class_exists(\Fisharebest\Webtrees\I18N\Translation::class);
 $has_webtrees_22_loader = class_exists(\Fisharebest\Localization\Translation::class);
 
@@ -46,6 +54,7 @@ if (!is_string($script)
     || !str_contains($script, "type: 'POST'")
     || !str_contains($script, 'data.from = table.dataset.from')
     || !str_contains($script, 'data.xref = table.dataset.xref')
+    || !str_contains($script, 'hh-change-log-status--')
 ) {
     throw new RuntimeException('The DataTables compatibility bridge is incomplete.');
 }

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hh-change-log\n"
 "Report-Msgid-Bugs-To: Hermann Hartenthaler <hermann@hartenthaler.de>\n"
-"POT-Creation-Date: 2026-06-03 11:11+0200\n"
+"POT-Creation-Date: 2026-07-31 00:00+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,6 +25,10 @@ msgstr ""
 
 #: ChangeLogTabModule.php
 msgid "The display settings have been updated."
+msgstr ""
+
+#: ChangeLogTabModule.php
+msgid "The display settings have been reset to their defaults."
 msgstr ""
 
 #: resources/views/settings.phtml
@@ -68,5 +72,21 @@ msgid "User column"
 msgstr ""
 
 #: resources/views/settings.phtml
+msgid "Record column"
+msgstr ""
+
+#: resources/views/settings.phtml
 msgid "Family tree column"
+msgstr ""
+
+#: resources/views/settings.phtml
+msgid "Hide column"
+msgstr ""
+
+#: resources/views/settings.phtml
+msgid "Show column"
+msgstr ""
+
+#: resources/views/settings.phtml
+msgid "Reset to defaults"
 msgstr ""
