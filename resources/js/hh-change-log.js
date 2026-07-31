@@ -238,13 +238,23 @@
                     return json.data;
                 },
             },
+            columns: [
+                {data: 0},
+                {data: 1},
+                {data: 2},
+                {data: 3},
+                {data: 5},
+                {data: 6},
+                {data: 4},
+            ],
             columnDefs: [
-                {targets: 0, visible: false},
-                {render: renderStatus, targets: 2},
-                {targets: 3, visible: table.dataset.showRecord === 'true'},
-                {orderable: false, targets: 4, visible: true},
-                {targets: 5, visible: table.dataset.showUser === 'true'},
-                {targets: 6, visible: table.dataset.showTree === 'true'},
+                {orderable: false, targets: 0, visible: false},
+                {orderable: false, targets: 1},
+                {orderable: false, render: renderStatus, targets: 2},
+                {orderable: false, targets: 3, visible: table.dataset.showRecord === 'true'},
+                {orderable: false, targets: 4, visible: table.dataset.showUser === 'true'},
+                {orderable: false, targets: 5, visible: table.dataset.showTree === 'true'},
+                {orderable: false, targets: 6, visible: true},
             ],
             drawCallback: () => {
                 table.querySelectorAll('.gedcom-data:not([data-hh-change-log-details])').forEach((content) => {

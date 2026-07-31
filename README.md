@@ -54,6 +54,7 @@ The module supports
 * read-only display of change-log entries for the selected individual
 * DataTables-based server-side table loading
 * timestamp, status, record, GEDCOM data, user, and tree columns
+* fixed newest-first chronological order with GEDCOM data as the rightmost column
 * compact color-coded status indicators with translated tooltips
 * highlighted GEDCOM differences for inserted and deleted data
 * localized human-readable summaries for unambiguous changes to common facts

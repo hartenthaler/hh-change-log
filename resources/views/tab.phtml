@@ -106,18 +106,17 @@ use Hartenthaler\Webtrees\ChangeLog\Internationalization\MoreI18N;
 			data-show-user="<?= $show_user ? 'true' : 'false' ?>"
 			data-searching="false"
 			data-server-side="true"
-			data-sorting="<?= e('[[ 0, "desc" ]]') ?>"
 			data-maximum-number="<?= e($maximum_number ?? 0) ?>"
 		>
 			<thead>
 				<tr>
-					<th data-visible="false"></th>
-					<th><?= MoreI18N::xlate('Timestamp') ?></th>
-					<th><?= MoreI18N::xlate('Status') ?></th>
-					<th data-visible="<?= $show_record ? 'true' : 'false' ?>"><?= MoreI18N::xlate('Record') ?></th>
+					<th data-sortable="false" data-visible="false"></th>
+					<th data-sortable="false"><?= MoreI18N::xlate('Timestamp') ?></th>
+					<th data-sortable="false"><?= MoreI18N::xlate('Status') ?></th>
+					<th data-sortable="false" data-visible="<?= $show_record ? 'true' : 'false' ?>"><?= MoreI18N::xlate('Record') ?></th>
+					<th data-sortable="false" data-visible="<?= $show_user ? 'true' : 'false' ?>"><?= MoreI18N::xlate('User') ?></th>
+					<th data-sortable="false" data-visible="<?= $show_tree ? 'true' : 'false' ?>"><?= MoreI18N::xlate('Tree') ?></th>
 					<th data-sortable="false"><?= MoreI18N::xlate('Data') ?></th>
-					<th data-visible="<?= $show_user ? 'true' : 'false' ?>"><?= MoreI18N::xlate('User') ?></th>
-					<th data-visible="<?= $show_tree ? 'true' : 'false' ?>"><?= MoreI18N::xlate('Tree') ?></th>
 				</tr>
 			</thead>
 		</table>

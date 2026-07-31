@@ -187,12 +187,19 @@ function run(version) {
     assert.equal(response.recordsFiltered, 15);
     assert.equal(response.recordsTotal, 15);
 
+    assert.deepEqual(Array.from(options.columns, (column) => column.data), [0, 1, 2, 3, 5, 6, 4]);
+    assert.deepEqual(Array.from(options.order[0]), [0, 'desc']);
+
     const columnDefinition = (target) => options.columnDefs.find((definition) => definition.targets === target);
     assert.equal(columnDefinition(0).visible, false);
     assert.equal(columnDefinition(3).visible, false);
     assert.equal(columnDefinition(4).visible, true);
-    assert.equal(columnDefinition(5).visible, true);
-    assert.equal(columnDefinition(6).visible, false);
+    assert.equal(columnDefinition(5).visible, false);
+    assert.equal(columnDefinition(6).visible, true);
+
+    for (let target = 0; target <= 6; target += 1) {
+        assert.equal(columnDefinition(target).orderable, false);
+    }
 
     const statusRenderer = columnDefinition(2).render;
     const statusIndicator = statusRenderer('pending', 'display');
