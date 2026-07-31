@@ -5,6 +5,33 @@ const vm = require('node:vm');
 const source = fs.readFileSync('resources/js/hh-change-log.js', 'utf8');
 
 function createTable() {
+    const gedcomContent = {
+        childNodes: [
+            {nodeType: 3, textContent: '0 @I1@ INDI\n1 BIRT\n'},
+            {nodeType: 1, tagName: 'DEL', textContent: '2 PLAC Berlin'},
+            {nodeType: 3, textContent: '\n'},
+            {nodeType: 1, tagName: 'INS', textContent: '2 PLAC Hamburg'},
+        ],
+        replaceWith(details) {
+            this.details = details;
+        },
+    };
+    const unknownContent = {
+        childNodes: [{nodeType: 1, tagName: 'INS', textContent: '1 _CUSTOM value'}],
+        replaceWith(details) {
+            this.details = details;
+        },
+    };
+    const complexContent = {
+        childNodes: [
+            {nodeType: 1, tagName: 'INS', textContent: '1 NAME Alice /Example/'},
+            {nodeType: 3, textContent: '\n'},
+            {nodeType: 1, tagName: 'INS', textContent: '1 SEX F'},
+        ],
+        replaceWith(details) {
+            this.details = details;
+        },
+    };
     const statusCell = {
         dataset: {},
         textContent: 'pending',
@@ -21,12 +48,24 @@ function createTable() {
             gedcomExpanded: 'false',
             maximumNumber: '15',
             statusLabels: JSON.stringify({accepted: 'accepted', pending: 'pending', rejected: 'rejected'}),
+            summaryLabels: JSON.stringify({'BIRT:PLAC': 'Birth place', NAME: 'Name', SEX: 'Sex'}),
+            summaryText: JSON.stringify({
+                added: '{fact} added',
+                changed: '{fact} changed',
+                empty: 'Empty value',
+                new: 'New value',
+                old: 'Previous value',
+                removed: '{fact} removed',
+            }),
             xref: 'I1',
         },
         querySelectorAll(selector) {
-            return selector === 'tbody tr' ? [{cells: [{}, {}, statusCell]}] : [];
+            return selector === 'tbody tr' ? [{cells: [{}, {}, statusCell]}] : [gedcomContent, unknownContent, complexContent];
         },
+        complexContent,
+        gedcomContent,
         statusCell,
+        unknownContent,
     };
 }
 
@@ -109,11 +148,20 @@ function run(version) {
     };
     const document = {
         baseURI: 'https://example.test/individual/I1',
-        createElement() {
+        createElement(tagName) {
             return {
+                children: [],
+                dataset: {},
+                append(...children) {
+                    this.children.push(...children);
+                },
+                before(element) {
+                    this.beforeElement = element;
+                },
                 setAttribute(name, value) {
                     this[name] = value;
                 },
+                tagName: tagName.toUpperCase(),
             };
         },
         querySelector(selector) {
@@ -149,6 +197,20 @@ function run(version) {
     assert.equal(table.statusCell.indicator.title, 'pending');
     assert.equal(table.statusCell.indicator['aria-label'], 'pending');
     assert.equal(table.statusCell.indicator.role, 'img');
+
+    const humanSummary = table.gedcomContent.details.beforeElement;
+    assert.equal(humanSummary.className, 'hh-change-log-summary');
+    assert.equal(humanSummary.children[0].textContent, 'Birth place changed');
+    assert.equal(humanSummary.children[1].textContent, 'Berlin');
+    assert.equal(humanSummary.children[1].title, 'Previous value');
+    assert.equal(humanSummary.children[2].textContent, '→');
+    assert.equal(humanSummary.children[3].textContent, 'Hamburg');
+    assert.equal(humanSummary.children[3].title, 'New value');
+    assert.equal(table.gedcomContent.details.children[1], table.gedcomContent);
+    assert.equal(table.unknownContent.details.beforeElement, undefined);
+    assert.equal(table.unknownContent.details.children[1], table.unknownContent);
+    assert.equal(table.complexContent.details.beforeElement, undefined);
+    assert.equal(table.complexContent.details.children[1], table.complexContent);
 
     filters.fields.to.value = '2026-02-01';
     filters.fields.type.value = 'pending';

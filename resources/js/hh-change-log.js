@@ -8,6 +8,8 @@
     const filters = document.querySelector('.hh-change-log-filters');
     const filterNames = ['from', 'to', 'type', 'username', 'oldged', 'newged'];
     const filterValue = (name) => filters?.elements.namedItem(name)?.value.trim() ?? '';
+    const summaryLabels = JSON.parse(table.dataset.summaryLabels ?? '{}');
+    const summaryText = JSON.parse(table.dataset.summaryText ?? '{}');
     const ajaxUrl = () => {
         const url = new URL(table.dataset.ajax, document.baseURI);
 
@@ -24,6 +26,147 @@
         });
 
         return url.toString();
+    };
+
+    const parseGedcomLines = (content) => {
+        const lines = [];
+        let text = '';
+        let change = null;
+
+        const pushLine = () => {
+            const match = text.match(/^(\d+)\s+([A-Z0-9_]+)(?:\s+(.*))?$/);
+
+            lines.push(match === null ? {text, change} : {
+                text,
+                change,
+                level: Number(match[1]),
+                tag: match[2],
+                value: match[3] ?? '',
+            });
+            text = '';
+            change = null;
+        };
+
+        const append = (value, lineChange) => {
+            const parts = value.split('\n');
+
+            parts.forEach((part, index) => {
+                text += part;
+
+                if (part !== '' && lineChange !== null) {
+                    change = change === null || change === lineChange ? lineChange : 'mixed';
+                }
+
+                if (index < parts.length - 1) {
+                    pushLine();
+                }
+            });
+        };
+
+        Array.from(content.childNodes).forEach((node) => {
+            const tag = node.nodeType === 1 ? node.tagName.toLowerCase() : '';
+            const lineChange = tag === 'del' ? 'old' : tag === 'ins' ? 'new' : null;
+
+            append(node.textContent, lineChange);
+        });
+
+        if (text !== '') {
+            pushLine();
+        }
+
+        return lines;
+    };
+
+    const summaryLabel = (lines, index) => {
+        const line = lines[index];
+
+        if (line.level === undefined || line.tag === undefined) {
+            return null;
+        }
+
+        for (let previous = index - 1; previous >= 0; previous -= 1) {
+            const parent = lines[previous];
+
+            if (parent.change === null && parent.level !== undefined && parent.level < line.level) {
+                const path = `${parent.tag}:${line.tag}`;
+
+                return summaryLabels[path] ?? summaryLabels[line.tag] ?? null;
+            }
+        }
+
+        return summaryLabels[line.tag] ?? null;
+    };
+
+    const formatSummaryText = (pattern, label) => pattern.replace('{fact}', label);
+
+    const createValue = (value, type) => {
+        const element = document.createElement('span');
+
+        element.className = `hh-change-log-summary__value hh-change-log-summary__value--${type}`;
+        element.textContent = value === '' ? summaryText.empty : value;
+        element.title = type === 'old' ? summaryText.old : summaryText.new;
+
+        return element;
+    };
+
+    const createSummary = (content) => {
+        const lines = parseGedcomLines(content);
+        const changes = lines
+            .map((line, index) => ({...line, index, label: summaryLabel(lines, index)}))
+            .filter((line) => line.change === 'old' || line.change === 'new');
+
+        if (changes.length === 0 || changes.length > 2 || changes.some((line) => line.label === null)) {
+            return null;
+        }
+
+        const oldLine = changes.find((line) => line.change === 'old');
+        const newLine = changes.find((line) => line.change === 'new');
+        let pattern;
+        let label;
+
+        if (oldLine !== undefined && newLine !== undefined) {
+            if (oldLine.tag !== newLine.tag || oldLine.level !== newLine.level || oldLine.label !== newLine.label || oldLine.value === newLine.value) {
+                return null;
+            }
+
+            pattern = summaryText.changed;
+            label = oldLine.label;
+        } else if (newLine !== undefined && changes.length === 1) {
+            pattern = summaryText.added;
+            label = newLine.label;
+        } else if (oldLine !== undefined && changes.length === 1) {
+            pattern = summaryText.removed;
+            label = oldLine.label;
+        } else {
+            return null;
+        }
+
+        const summary = document.createElement('div');
+        const title = document.createElement('span');
+
+        summary.className = 'hh-change-log-summary';
+        title.className = 'hh-change-log-summary__title';
+        title.textContent = formatSummaryText(pattern, label);
+        summary.append(title);
+
+        if (oldLine !== undefined) {
+            summary.append(createValue(oldLine.value, 'old'));
+        }
+
+        if (oldLine !== undefined && newLine !== undefined) {
+            const arrow = document.createElement('span');
+
+            arrow.className = 'hh-change-log-summary__arrow';
+            arrow.textContent = '→';
+            arrow.setAttribute('aria-hidden', 'true');
+            summary.append(arrow);
+        }
+
+        if (newLine !== undefined) {
+            summary.append(createValue(newLine.value, 'new'));
+        }
+
+        return summary;
     };
 
     const initialize = () => {
@@ -77,11 +220,15 @@
                 table.querySelectorAll('.gedcom-data:not([data-hh-change-log-details])').forEach((content) => {
                     const details = document.createElement('details');
                     const summary = document.createElement('summary');
+                    const humanSummary = createSummary(content);
 
                     details.dataset.hhChangeLogDetails = '';
                     details.open = table.dataset.gedcomExpanded === 'true';
                     summary.textContent = table.dataset.gedcomDetailsLabel;
                     content.replaceWith(details);
+                    if (humanSummary !== null) {
+                        details.before(humanSummary);
+                    }
                     details.append(summary, content);
                 });
 

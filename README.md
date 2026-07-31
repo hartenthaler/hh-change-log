@@ -59,6 +59,7 @@ The module supports
 * timestamp, status, record, GEDCOM data, user, and tree columns
 * compact color-coded status indicators with translated tooltips
 * highlighted GEDCOM differences for inserted and deleted data
+* localized human-readable summaries for unambiguous changes to common facts
 * expandable and collapsible GEDCOM details
 * optional limits for the date range and number of entries
 * combinable server-side filters for dates, status, user, and old or new GEDCOM data
@@ -80,7 +81,9 @@ Administrators can configure the module from its settings page in the control pa
 
 Managers can filter the table without loading the complete change history into the browser. Separate fields for old and new GEDCOM data support searches for tags or text in either version of a changed record. The reset action clears all filters.
 
-Managers can expand or collapse the GEDCOM details for each entry directly in the **Changes** tab.
+For simple changes to common facts, the tab shows a localized summary with visually distinct previous and new values. This includes names, sex, birth, death, occupation, residence, marriage, and divorce data. Summaries are created only for unambiguous single-line additions, removals, or replacements. Complex and unknown GEDCOM structures are not interpreted.
+
+Managers can expand or collapse the original GEDCOM details for each entry directly in the **Changes** tab. The raw GEDCOM remains available for every summarized change without information loss.
 Existing saved settings remain unchanged until an administrator saves new values or resets them to the defaults.
 
 <a name="Requirements"></a>

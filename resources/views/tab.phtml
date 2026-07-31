@@ -76,6 +76,30 @@ use Hartenthaler\Webtrees\ChangeLog\Internationalization\MoreI18N;
 				'pending' => I18N::translate('pending'),
 				'rejected' => I18N::translate('rejected'),
 			], JSON_THROW_ON_ERROR)) ?>"
+			data-summary-labels="<?= e(json_encode([
+				'NAME' => I18N::translate('Name'),
+				'SEX' => I18N::translate('Sex'),
+				'BIRT' => I18N::translate('Birth'),
+				'BIRT:DATE' => I18N::translate('Birth date'),
+				'BIRT:PLAC' => I18N::translate('Birth place'),
+				'DEAT' => I18N::translate('Death'),
+				'DEAT:DATE' => I18N::translate('Death date'),
+				'DEAT:PLAC' => I18N::translate('Death place'),
+				'OCCU' => I18N::translate('Occupation'),
+				'RESI' => I18N::translate('Residence'),
+				'MARR' => I18N::translate('Marriage'),
+				'MARR:DATE' => I18N::translate('Marriage date'),
+				'MARR:PLAC' => I18N::translate('Marriage place'),
+				'DIV' => I18N::translate('Divorce'),
+			], JSON_THROW_ON_ERROR)) ?>"
+			data-summary-text="<?= e(json_encode([
+				'changed' => I18N::translate('{fact} changed'),
+				'added' => I18N::translate('{fact} added'),
+				'removed' => I18N::translate('{fact} removed'),
+				'old' => I18N::translate('Previous value'),
+				'new' => I18N::translate('New value'),
+				'empty' => I18N::translate('Empty value'),
+			], JSON_THROW_ON_ERROR)) ?>"
 			data-xref="<?= e($xref) ?>"
 			data-searching="false"
 			data-server-side="true"

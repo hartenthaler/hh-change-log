@@ -12,6 +12,8 @@
 - Added an administrator action to reset all display settings to their defaults.
 - Added combinable server-side filters for date range, status, user, and old or new GEDCOM data.
 - Added a filter reset action that reloads the unfiltered change history for the individual.
+- Added localized human-readable summaries for unambiguous changes to common GEDCOM facts.
+- Kept the complete raw GEDCOM diff available for summarized changes and used it as the fallback for complex or unknown structures.
 
 ## 2.2.6.4
 
