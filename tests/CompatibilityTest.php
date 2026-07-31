@@ -55,9 +55,13 @@ if (!$has_webtrees_23_loader && !$has_webtrees_22_loader) {
 $script = file_get_contents(__DIR__ . '/../resources/js/hh-change-log.js');
 $tab_view = file_get_contents(__DIR__ . '/../resources/views/tab.phtml');
 
-if (!is_string($script)
-    || !is_string($tab_view)
-    || str_contains($script, '$(document)')
+if (!is_string($script) || !is_string($tab_view)) {
+    throw new RuntimeException('The DataTables compatibility bridge could not be loaded.');
+}
+
+$script = str_replace("\r\n", "\n", $script);
+
+if (str_contains($script, '$(document)')
     || str_contains($script, 'row.cells[2]')
     || !str_contains($script, "type: 'POST'")
     || !str_contains($script, 'data.xref = table.dataset.xref')
@@ -68,8 +72,9 @@ if (!is_string($script)
     || substr_count($script, 'orderable: false') !== 7
     || !str_contains($script, "const filterNames = ['from', 'to', 'type', 'username', 'oldged', 'newged']")
     || !str_contains($script, 'dataTable.ajax.url(ajaxUrl()).load()')
-    || !str_contains($script, 'const createSummary = (content) =>')
-    || !str_contains($script, 'changes.length > 2')
+    || !str_contains($script, 'const createSummaries = (content) =>')
+    || !str_contains($script, "data.order = [{column: 0, dir: 'desc'}]")
+    || !str_contains($script, 'stateSave: false')
     || !str_contains($script, 'hh-change-log-status--')
     || !str_contains($tab_view, "['tree' => \$tree->name(), 'xref' => \$xref]")
 ) {

@@ -84,12 +84,19 @@
             });
         };
 
-        Array.from(content.childNodes).forEach((node) => {
+        const appendNode = (node, inheritedChange = null) => {
             const tag = node.nodeType === 1 ? node.tagName.toLowerCase() : '';
-            const lineChange = tag === 'del' ? 'old' : tag === 'ins' ? 'new' : null;
+            const lineChange = tag === 'del' ? 'old' : tag === 'ins' ? 'new' : inheritedChange;
+            const children = Array.from(node.childNodes ?? []);
 
-            append(node.textContent, lineChange);
-        });
+            if (children.length === 0) {
+                append(node.textContent ?? '', lineChange);
+            } else {
+                children.forEach((child) => appendNode(child, lineChange));
+            }
+        };
+
+        Array.from(content.childNodes).forEach((node) => appendNode(node));
 
         if (text !== '') {
             pushLine();
@@ -108,7 +115,7 @@
         for (let previous = index - 1; previous >= 0; previous -= 1) {
             const parent = lines[previous];
 
-            if (parent.change === null && parent.level !== undefined && parent.level < line.level) {
+            if (parent.level !== undefined && parent.level < line.level) {
                 const path = `${parent.tag}:${line.tag}`;
 
                 return summaryLabels[path] ?? summaryLabels[line.tag] ?? null;
@@ -130,32 +137,43 @@
         return element;
     };
 
-    const createSummary = (content) => {
-        const lines = parseGedcomLines(content);
-        const changes = lines
-            .map((line, index) => ({...line, index, label: summaryLabel(lines, index)}))
-            .filter((line) => line.change === 'old' || line.change === 'new');
+    const isStructuralChange = (lines, index) => {
+        const line = lines[index];
 
-        if (changes.length === 0 || changes.length > 2 || changes.some((line) => line.label === null)) {
-            return null;
+        if (line.value !== '' || line.level === undefined) {
+            return false;
         }
 
-        const oldLine = changes.find((line) => line.change === 'old');
-        const newLine = changes.find((line) => line.change === 'new');
+        for (let following = index + 1; following < lines.length; following += 1) {
+            const child = lines[following];
+
+            if (child.level === undefined || child.level <= line.level) {
+                break;
+            }
+
+            if (child.change === line.change && summaryLabel(lines, following) !== null) {
+                return true;
+            }
+        }
+
+        return false;
+    };
+
+    const createSummary = (oldLine, newLine) => {
         let pattern;
         let label;
 
         if (oldLine !== undefined && newLine !== undefined) {
-            if (oldLine.tag !== newLine.tag || oldLine.level !== newLine.level || oldLine.label !== newLine.label || oldLine.value === newLine.value) {
+            if (oldLine.value === newLine.value) {
                 return null;
             }
 
             pattern = summaryText.changed;
             label = oldLine.label;
-        } else if (newLine !== undefined && changes.length === 1) {
+        } else if (newLine !== undefined) {
             pattern = summaryText.added;
             label = newLine.label;
-        } else if (oldLine !== undefined && changes.length === 1) {
+        } else if (oldLine !== undefined) {
             pattern = summaryText.removed;
             label = oldLine.label;
         } else {
@@ -190,6 +208,45 @@
         return summary;
     };
 
+    const createSummaries = (content) => {
+        const lines = parseGedcomLines(content);
+        const changes = lines
+            .map((line, index) => ({...line, index, label: summaryLabel(lines, index)}))
+            .filter((line) => (line.change === 'old' || line.change === 'new') && !isStructuralChange(lines, line.index));
+
+        if (changes.length === 0 || changes.some((line) => line.label === null)) {
+            return [];
+        }
+
+        const groups = new Map();
+
+        changes.forEach((line) => {
+            const key = `${line.level}:${line.tag}:${line.label}`;
+            const group = groups.get(key) ?? {old: [], new: []};
+
+            group[line.change].push(line);
+            groups.set(key, group);
+        });
+
+        if (Array.from(groups.values()).some((group) => group.old.length > 1 || group.new.length > 1)) {
+            return [];
+        }
+
+        const summaries = [];
+
+        for (const group of groups.values()) {
+            const summary = createSummary(group.old[0], group.new[0]);
+
+            if (summary === null) {
+                return [];
+            }
+
+            summaries.push(summary);
+        }
+
+        return summaries;
+    };
+
     const initialize = () => {
         if (table.dataset.hhChangeLogInitialized !== undefined) {
             return true;
@@ -217,6 +274,7 @@
                 data: (data) => {
                     requestStart = Number(data.start ?? 0);
                     data.xref = table.dataset.xref;
+                    data.order = [{column: 0, dir: 'desc'}];
                     filterNames.forEach((name) => {
                         data[name] = filterValue(name);
                     });
@@ -260,14 +318,14 @@
                 table.querySelectorAll('.gedcom-data:not([data-hh-change-log-details])').forEach((content) => {
                     const details = document.createElement('details');
                     const summary = document.createElement('summary');
-                    const humanSummary = createSummary(content);
+                    const humanSummaries = createSummaries(content);
 
-                    details.dataset.hhChangeLogDetails = '';
+                    content.dataset.hhChangeLogDetails = '';
                     details.open = table.dataset.gedcomExpanded === 'true';
                     summary.textContent = table.dataset.gedcomDetailsLabel;
                     content.replaceWith(details);
-                    if (humanSummary !== null) {
-                        details.before(humanSummary);
+                    if (humanSummaries.length > 0) {
+                        details.before(...humanSummaries);
                     }
                     details.append(summary, content);
                 });
@@ -276,6 +334,7 @@
             order: [[0, 'desc']],
             searching: false,
             serverSide: true,
+            stateSave: false,
         };
 
         if (supportsDataTables2) {
