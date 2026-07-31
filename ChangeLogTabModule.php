@@ -17,7 +17,6 @@ namespace Hartenthaler\Webtrees\ChangeLog;
 
 use Fisharebest\Webtrees\Auth;
 use Fisharebest\Webtrees\FlashMessages;
-use Fisharebest\Localization\Translation;
 use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\Individual;
 use Fisharebest\Webtrees\Module\AbstractModule;
@@ -129,15 +128,37 @@ class ChangeLogTabModule extends AbstractModule implements ModuleTabInterface, M
         }
 
         $languageFolder = $this->resourcesFolder() . 'lang' . DIRECTORY_SEPARATOR;
-        $poFile = $languageFolder . $languageFile . '.po';
         $moFile = $languageFolder . $languageFile . '.mo';
+        $poFile = $languageFolder . $languageFile . '.po';
 
-        if (is_file($poFile)) {
-            return (new Translation($poFile))->asArray();
-        }
+        foreach ([$moFile, $poFile] as $file) {
+            if (!is_file($file)) {
+                continue;
+            }
 
-        if (is_file($moFile)) {
-            return (new Translation($moFile))->asArray();
+            // webtrees 2.3 replaced fisharebest/localization with its own stream-based loader.
+            if (class_exists(\Fisharebest\Webtrees\I18N\Translation::class)) {
+                $stream = fopen($file, 'rb');
+
+                if ($stream === false) {
+                    continue;
+                }
+
+                try {
+                    $translation = str_ends_with($file, '.mo')
+                        ? \Fisharebest\Webtrees\I18N\Translation::fromMoStream($stream)
+                        : \Fisharebest\Webtrees\I18N\Translation::fromPoStream($stream);
+
+                    return $translation->toArray();
+                } finally {
+                    fclose($stream);
+                }
+            }
+
+            // webtrees 2.2 still provides the former file-based localization package.
+            if (class_exists(\Fisharebest\Localization\Translation::class)) {
+                return (new \Fisharebest\Localization\Translation($file))->asArray();
+            }
         }
 
         return [];
@@ -193,7 +214,8 @@ class ChangeLogTabModule extends AbstractModule implements ModuleTabInterface, M
      */
     public function headContent(): string
     {
-        return '<link rel="stylesheet" href="' . e($this->assetUrl('css/hh-change-log.min.css')) . '">';
+        return '<link rel="stylesheet" href="' . e($this->assetUrl('css/hh-change-log.min.css')) . '">' .
+            '<script src="' . e($this->assetUrl('js/hh-change-log.js')) . '" defer></script>';
     }
 
 	/**

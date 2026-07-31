@@ -3,6 +3,9 @@
 ## Next release
 
 - Updated Dutch translations; thanks to @TheDutchJewel.
+- Added compatibility with webtrees 2.3 while retaining webtrees 2.2.6 support.
+- Replaced jQuery-dependent table event handling with a DataTables 1/2 compatibility bridge.
+- Added automated compatibility checks for both supported webtrees versions.
 
 ## 2.2.6.4
 
