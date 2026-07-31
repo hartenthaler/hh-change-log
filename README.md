@@ -79,10 +79,12 @@ Managers can expand or collapse the GEDCOM details for each entry directly in th
 <a name="Requirements"></a>
 ## 📌 Requirements
 
-This module requires **webtrees** version 2.2 or later.
+This module supports **webtrees 2.2.6 and webtrees 2.3** from the same module package.
 It has the same system requirements as [webtrees](https://github.com/fisharebest/webtrees#system-requirements).
 
 The module depends on the existing webtrees pending-changes log functionality.
+Small compatibility adapters select the gettext loader and DataTables API supplied by
+the installed webtrees version.
 
 <a name="Installation"></a>
 ## 📥 Installation
