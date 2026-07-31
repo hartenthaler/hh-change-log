@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: hh-change-log\n"
 "Report-Msgid-Bugs-To: Hermann Hartenthaler <hermann@hartenthaler.de>\n"
 "POT-Creation-Date: 2026-06-03 11:10+0200\n"
-"PO-Revision-Date: 2026-06-03 11:10+0200\n"
+"PO-Revision-Date: 2026-07-31 00:00+0200\n"
 "Last-Translator: Hermann Hartenthaler <hermann@hartenthaler.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -27,6 +27,10 @@ msgstr "Ein Reiter, der die letzten GEDCOM-Datenänderungen für eine Person anz
 #: ChangeLogTabModule.php
 msgid "The display settings have been updated."
 msgstr "Die Anzeigeeinstellungen wurden aktualisiert."
+
+#: ChangeLogTabModule.php
+msgid "The display settings have been reset to their defaults."
+msgstr "Die Anzeigeeinstellungen wurden auf die Standardwerte zurückgesetzt."
 
 #: resources/views/settings.phtml
 msgid "Default date range"
@@ -69,5 +73,21 @@ msgid "User column"
 msgstr "Benutzerspalte"
 
 #: resources/views/settings.phtml
+msgid "Record column"
+msgstr "Datensatzspalte"
+
+#: resources/views/settings.phtml
 msgid "Family tree column"
 msgstr "Stammbaumspalte"
+
+#: resources/views/settings.phtml
+msgid "Hide column"
+msgstr "Spalte ausblenden"
+
+#: resources/views/settings.phtml
+msgid "Show column"
+msgstr "Spalte einblenden"
+
+#: resources/views/settings.phtml
+msgid "Reset to defaults"
+msgstr "Auf Standard zurücksetzen"

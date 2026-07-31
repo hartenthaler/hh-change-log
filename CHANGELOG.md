@@ -6,6 +6,10 @@
 - Added compatibility with webtrees 2.3 while retaining webtrees 2.2.6 support.
 - Replaced jQuery-dependent table event handling with a DataTables 1/2 compatibility bridge.
 - Added automated compatibility checks for both supported webtrees versions.
+- Added configurable visibility for the record column and changed the defaults to show the user column while hiding the record and family-tree columns.
+- Replaced the status text with color-coded indicators and translated tooltips.
+- Added module-specific column visibility labels so translations no longer depend on ambiguous webtrees core wording.
+- Added an administrator action to reset all display settings to their defaults.
 
 ## 2.2.6.4
 
